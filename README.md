@@ -53,6 +53,7 @@ If you still have trouble installing Gradio to Blender python, please check [thi
 Currently working on other implementations like :
 - Image to Mesh option
 - Adding more Text2Mesh/Image2Mesh models
+- Updating displayed parameters on differents models  
 
 ## License
 
