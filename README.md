@@ -5,6 +5,13 @@
 🟠 Generate 3D models using Gradio API directly from Blender
 </p>
 
+---
+
+<p align="center">
+  <img src="assets/example_2.png" height="300px" />
+  <img src="assets/example_1.png" height="300px" />
+</p>
+
 ## Get started
 
 ### Installing Autosculptor
