@@ -16,7 +16,7 @@
 
 ### Installing Autosculptor
 
-Download latest release in Release page. Then, in Blender, go to `Preferences > Addons > Install` and select `autosculptor.py`.
+Download latest release in [Release page](https://github.com/greenmagenta/autosculptor/releases). Then, in Blender, go to `Preferences > Addons > Install` and select `autosculptor.py`.
 To activate it, check it in the Menu. If an error appear, please take a look to the following instructions.
 
 ### Installing dependencies
