@@ -1,21 +1,14 @@
 # Autosculptor
 🟠 A Blender addon powered by Gradio API to generate 3D models
 
-## Installation
+## Get started
 
-### Clone the repository
+### Installing Autosculptor
 
-ALternatively, you can download the repository.
+Download latest release in Release page. Then, in Blender, go to `Preferences > Addons > Install` and select `autosculptor.py`.
+To activate it, check it in the Menu. If an error appear, please take a look to the following instructions.
 
-```bash
-$ git clone https://github.com/greenmagenta/autosculptor.git
-```
-
-### Install the addon
-
-Go to Preferences > Addons > Install and select `autosculptor.py`.
-
-### Install Gradio module
+### Installing dependencies
 
 This addon a use third-party Gradio Python module. To install Gradio module please refer to the following protocol to avoid any error.
 
