@@ -1,5 +1,9 @@
-# Autosculptor
-🟠 A Blender addon powered by Gradio API to generate 3D models
+<p align="center">
+  <img src="assets/logo.svg" height="64px" />
+</p>
+<p align="center">
+🟠 Generate 3D models using Gradio API directly from Blender
+</p>
 
 ## Get started
 
