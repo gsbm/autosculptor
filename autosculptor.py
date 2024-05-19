@@ -1,6 +1,6 @@
 import bpy
 import random
-from gradio_client import Client
+from gradio_client import Client, file
 
 bl_info = {
     "name": "Autosculptor 3D Model Generator",
@@ -27,6 +27,7 @@ class GeneratorOperator(bpy.types.Operator):
         
         # Shape-E model
         if model_type == "shape-e-text":
+            # Generate 3D model with Shape-E model
             client = Client("hysts/Shap-E")
             result = client.predict(
                 prompt=prompt,
@@ -34,6 +35,58 @@ class GeneratorOperator(bpy.types.Operator):
                 guidance_scale=guidance_scale,
                 num_inference_steps=num_inference_steps,
                 api_name="/text-to-3d"
+            )
+            model_path = result
+
+        # SDXL + Shape-E model
+        elif model_type == "sdxl-shape-e":
+            # Generate image with SDXL model
+            client1 = Client("https://zhuguangbin86-stabilityai-stable-diffusion-xl-base-1-0.hf.space")
+            image = client1.predict(
+                prompt,
+                api_name="/predict"
+            )
+            image_path = image
+
+            # Generate 3D model with Shape-E model
+            client2 = Client("hysts/Shap-E")
+            result = client2.predict(
+                    image=file(image_path),
+                    seed=seed,
+                    guidance_scale=guidance_scale,
+                    num_inference_steps=num_inference_steps,
+                    api_name="/image-to-3d"
+            )
+            model_path = result
+
+        # SDXL + DreamGaussian model
+        elif model_type == "sdxl-dreamgaussian":
+            # Generate image with SDXL model
+            client1 = Client("https://zhuguangbin86-stabilityai-stable-diffusion-xl-base-1-0.hf.space")
+            image = client1.predict(
+                prompt,
+                api_name="/predict"
+            )
+            image_path = image
+
+            # Estimate elevation angle with One-2-3-45 model
+            client2 = Client("https://one-2-3-45-one-2-3-45.hf.space/")
+            elevation_angle_deg = client2.predict(
+                image_path,
+                True,
+                api_name="/estimate_elevation"
+            )
+
+            if elevation_angle_deg < -90 or elevation_angle_deg > 90:
+                elevation_angle_deg = 0
+
+            # Generate 3D model with DreamGaussian model
+            client3 = Client("https://jiawei011-dreamgaussian.hf.space/--replicas/e0l1g/")
+            result = client3.predict(
+                image_path,
+                True,
+                elevation_angle_deg,
+                fn_index=2
             )
             model_path = result
 
@@ -123,7 +176,9 @@ class GeneratorProperties(bpy.types.PropertyGroup):
     model_type: bpy.props.EnumProperty(
         name="Model",
         items=[
-            ("shape-e-text", "Shap-E", "hysts/Shap-E")
+            ("shape-e-text", "Shap-E", "hysts/Shap-E (~13s)"),
+            ("sdxl-shape-e", "SDXL + Shap-E", "zhuguangbin86/stabilityai-stable-diffusion-xl-base-1.0 + hysts/Shap-E (~30s)"),
+            ("sdxl-dreamgaussian", "SDXL + DreamGaussian", "zhuguangbin86/stabilityai-stable-diffusion-xl-base-1.0 + jiawei011/dreamgaussian (~600s)"),
         ],
         default="shape-e-text"
     )
