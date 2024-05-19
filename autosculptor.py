@@ -49,10 +49,13 @@ class GeneratorOperator(bpy.types.Operator):
         # SDXL + Shape-E model
         elif model_type == "sdxl-shape-e":
             # Generate image with SDXL model
-            client1 = Client("https://zhuguangbin86-stabilityai-stable-diffusion-xl-base-1-0.hf.space")
+            client1 = Client("hysts/SDXL")
             image = client1.predict(
-                prompt,
-                api_name="/predict"
+                prompt=prompt,
+                seed=seed,
+                guidance_scale_base=guidance_scale,
+                num_inference_steps_base=num_inference_steps,
+                api_name="/run"
             )
             image_path = image
 
@@ -77,10 +80,13 @@ class GeneratorOperator(bpy.types.Operator):
         # SDXL + DreamGaussian model
         elif model_type == "sdxl-dreamgaussian":
             # Generate image with SDXL model
-            client1 = Client("https://zhuguangbin86-stabilityai-stable-diffusion-xl-base-1-0.hf.space")
+            client1 = Client("hysts/SDXL")
             image = client1.predict(
-                prompt,
-                api_name="/predict"
+                prompt=prompt,
+                seed=seed,
+                guidance_scale_base=guidance_scale,
+                num_inference_steps_base=num_inference_steps,
+                api_name="/run"
             )
             image_path = image
 
@@ -108,10 +114,13 @@ class GeneratorOperator(bpy.types.Operator):
         # SDXL + InstantMesh model
         elif model_type == "sdxl-instantmesh":
             # Generate image with SDXL model
-            client1 = Client("https://zhuguangbin86-stabilityai-stable-diffusion-xl-base-1-0.hf.space")
+            client1 = Client("hysts/SDXL")
             image = client1.predict(
-                prompt,
-                api_name="/predict"
+                prompt=prompt,
+                seed=seed,
+                guidance_scale_base=guidance_scale,
+                num_inference_steps_base=num_inference_steps,
+                api_name="/run"
             )
             image_path = image
 
@@ -225,9 +234,9 @@ class GeneratorProperties(bpy.types.PropertyGroup):
         name="Model",
         items=[
             ("shape-e-text", "Shap-E", "hysts/Shap-E (~13s)"),
-            ("sdxl-shape-e", "SDXL + Shap-E", "zhuguangbin86/stabilityai-stable-diffusion-xl-base-1.0 + hysts/Shap-E (~30s)"),
-            ("sdxl-dreamgaussian", "SDXL + DreamGaussian", "zhuguangbin86/stabilityai-stable-diffusion-xl-base-1.0 + jiawei011/dreamgaussian (~600s)"),
-            ("sdxl-instantmesh", "SDXL + InstantMesh", "zhuguangbin86/stabilityai-stable-diffusion-xl-base-1.0 + TencentARC/InstantMesh (~60s)")
+            ("sdxl-shape-e", "SDXL + Shap-E", "hysts/SDXL + hysts/Shap-E (~30s)"),
+            ("sdxl-dreamgaussian", "SDXL + DreamGaussian", "hysts/SDXL + jiawei011/dreamgaussian (~600s)"),
+            ("sdxl-instantmesh", "SDXL + InstantMesh", "hysts/SDXL + TencentARC/InstantMesh (~60s)")
         ],
         default="shape-e-text"
     )
