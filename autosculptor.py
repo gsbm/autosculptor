@@ -52,6 +52,9 @@ class GeneratorOperator(bpy.types.Operator):
             client1 = Client("hysts/SDXL")
             image = client1.predict(
                 prompt=prompt,
+                negative_prompt="",
+                prompt_2="",
+                negative_prompt_2="",
                 seed=seed,
                 guidance_scale_base=guidance_scale,
                 num_inference_steps_base=num_inference_steps,
@@ -83,6 +86,9 @@ class GeneratorOperator(bpy.types.Operator):
             client1 = Client("hysts/SDXL")
             image = client1.predict(
                 prompt=prompt,
+                negative_prompt="",
+                prompt_2="",
+                negative_prompt_2="",
                 seed=seed,
                 guidance_scale_base=guidance_scale,
                 num_inference_steps_base=num_inference_steps,
@@ -117,6 +123,9 @@ class GeneratorOperator(bpy.types.Operator):
             client1 = Client("hysts/SDXL")
             image = client1.predict(
                 prompt=prompt,
+                negative_prompt="",
+                prompt_2="",
+                negative_prompt_2="",
                 seed=seed,
                 guidance_scale_base=guidance_scale,
                 num_inference_steps_base=num_inference_steps,
