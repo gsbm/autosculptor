@@ -56,10 +56,17 @@ class GeneratorOperator(bpy.types.Operator):
             )
             image_path = image
 
+            # Preprocess image with One-2-3-45 model
+            client2 = Client("https://one-2-3-45-one-2-3-45.hf.space/")
+            segmented_img_filepath = client2.predict(
+                image_path, 
+                api_name="/preprocess"
+            )
+
             # Generate 3D model with Shape-E model
-            client2 = Client("hysts/Shap-E")
-            result = client2.predict(
-                    image=file(image_path),
+            client3 = Client("hysts/Shap-E")
+            result = client3.predict(
+                    image=file(segmented_img_filepath),
                     seed=seed,
                     guidance_scale=guidance_scale,
                     num_inference_steps=num_inference_steps,
