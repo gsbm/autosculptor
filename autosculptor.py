@@ -6,6 +6,14 @@ bl_info = {
     "name": "Autosculptor 3D Model Generator",
     "blender": (2, 80, 0),
     "category": "Object",
+    "description": "Generate 3D models using generative models.",
+    "author": "Greenmagenta",
+    "version": (1, 1, 0),
+    "location": "View3D > Sidebar > Autosculptor",
+    "support": "COMMUNITY",
+    "doc_url": "https://github.com/greenmagenta/autosculptor",
+    "tracker_url": "https://github.com/greenmagenta/autosculptor/issues",
+    "isDraft": False
 }
 
 class GeneratorOperator(bpy.types.Operator):
