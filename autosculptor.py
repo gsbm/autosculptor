@@ -105,6 +105,39 @@ class GeneratorOperator(bpy.types.Operator):
             )
             model_path = result
 
+        # SDXL + InstantMesh model
+        elif model_type == "sdxl-instantmesh":
+            # Generate image with SDXL model
+            client1 = Client("https://zhuguangbin86-stabilityai-stable-diffusion-xl-base-1-0.hf.space")
+            image = client1.predict(
+                prompt,
+                api_name="/predict"
+            )
+            image_path = image
+
+            # Preprocess image with InstantMesh model
+            client2 = Client("TencentARC/InstantMesh")
+            preprocessed_image = client2.predict(
+                input_image=file(image_path),
+                do_remove_background=True,
+                api_name="/preprocess"
+            )
+
+            # Generate MVS images with InstantMesh model
+            mvs = client2.predict(
+                input_image=file(preprocessed_image),
+                sample_steps=num_inference_steps,
+                sample_seed=seed,
+                api_name="/generate_mvs"
+            )
+
+            # Generate 3D model with InstantMesh model
+            result = client2.predict(
+                api_name="/make3d"
+            )
+
+            model_path = result[1]
+
         else:
             self.report({'ERROR'}, "Invalid model type.")
             return {'CANCELLED'}
@@ -194,6 +227,7 @@ class GeneratorProperties(bpy.types.PropertyGroup):
             ("shape-e-text", "Shap-E", "hysts/Shap-E (~13s)"),
             ("sdxl-shape-e", "SDXL + Shap-E", "zhuguangbin86/stabilityai-stable-diffusion-xl-base-1.0 + hysts/Shap-E (~30s)"),
             ("sdxl-dreamgaussian", "SDXL + DreamGaussian", "zhuguangbin86/stabilityai-stable-diffusion-xl-base-1.0 + jiawei011/dreamgaussian (~600s)"),
+            ("sdxl-instantmesh", "SDXL + InstantMesh", "zhuguangbin86/stabilityai-stable-diffusion-xl-base-1.0 + TencentARC/InstantMesh (~60s)")
         ],
         default="shape-e-text"
     )
