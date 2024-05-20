@@ -223,14 +223,21 @@ class GeneratorPanel(bpy.types.Panel):
         scene = context.scene
         autosculptor_props = scene.autosculptor_props
 
-        # Add properties to the UI
+        # Add main properties to the UI
         layout.prop(autosculptor_props, "prompt")
-        layout.prop(autosculptor_props, "prompt_enhancer")
-        layout.prop(autosculptor_props, "seed")
-        layout.prop(autosculptor_props, "random_seed")
-        layout.prop(autosculptor_props, "guidance_scale")
-        layout.prop(autosculptor_props, "num_inference_steps")
         layout.prop(autosculptor_props, "model_type")
+
+        # Create a collapsible section for advanced settings
+        box = layout.box()
+        box.prop(autosculptor_props, "show_advanced", text="Advanced Settings", emboss=False, icon='TRIA_DOWN' if autosculptor_props.show_advanced else 'TRIA_RIGHT')
+        
+        if autosculptor_props.show_advanced:
+            box.prop(autosculptor_props, "prompt_enhancer")
+            box.prop(autosculptor_props, "seed")
+            box.prop(autosculptor_props, "random_seed")
+            box.prop(autosculptor_props, "guidance_scale")
+            box.prop(autosculptor_props, "num_inference_steps")
+
         layout.operator("object.autosculptor_model_generator")
 
 # Property group for user input
@@ -251,6 +258,7 @@ class GeneratorProperties(bpy.types.PropertyGroup):
         ],
         default="model-shape-e"
     )
+    show_advanced: bpy.props.BoolProperty(name="Show Advanced Settings", default=False)
 
 def register():
     bpy.utils.register_class(GeneratorOperator)
