@@ -44,7 +44,7 @@ If you still have trouble installing Gradio to Blender python, please check [thi
 
 ## Available models
 
-| Model | API Host(s) | Average generation time |
+| Model pipeline | API Host(s) | Average generation time |
 |---|---|---|
 | [Shap-E](https://github.com/openai/shap-e) | [hysts/Shap-E](https://huggingface.co/spaces/hysts/Shap-E) | ~13s |
 | [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) + [Shap-E](https://github.com/openai/shap-e) | [ByteDance/Hyper-SDXL-1Step-T2I](https://huggingface.co/spaces/ByteDance/Hyper-SDXL-1Step-T2I) + [hysts/Shap-E](https://huggingface.co/spaces/hysts/Shap-E) | ~30s |
