@@ -10,7 +10,7 @@ bl_info = {
     "category": "Object",
     "description": "Generate 3D models using generative models.",
     "author": "Greenmagenta",
-    "version": (1, 3, 0),
+    "version": (1, 4, 0),
     "location": "View3D > Sidebar > Autosculptor",
     "support": "COMMUNITY",
     "doc_url": "https://github.com/greenmagenta/autosculptor",
@@ -265,7 +265,10 @@ class GeneratorPanel(bpy.types.Panel):
         
         if autosculptor_props.show_advanced:
             box.prop(autosculptor_props, "prompt_enhancer")
-            box.prop(autosculptor_props, "seed")
+            row = box.row()
+            row.enabled = not autosculptor_props.random_seed
+            row.prop(autosculptor_props, "seed")
+            
             box.prop(autosculptor_props, "random_seed")
             box.prop(autosculptor_props, "guidance_scale")
             box.prop(autosculptor_props, "num_inference_steps")
