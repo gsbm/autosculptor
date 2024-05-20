@@ -57,7 +57,7 @@ If you still have trouble installing Gradio to Blender python, please check [thi
 |---|---|---|---|
 | <img src="assets/model_shape-e.jpg" height="200px" /> | <img src="assets/model_sdxl-shape-e.jpg" height="200px" /> | <img src="assets/model_sdxl-dreamgaussian.jpg" height="200px" /> | <img src="assets/model_sdxl-instantmesh.jpg" height="200px" /> |
 | A pinguin, 3d model ||||
-| <img src="assets/model_shape-e.jpg" height="200px" /> | <img src="assets/model_sdxl-shape-e.jpg" height="200px" /> | <img src="assets/model_sdxl-dreamgaussian.jpg" height="200px" /> | <img src="assets/model_sdxl-instantmesh.jpg" height="200px" /> |
+| <img src="assets/model_shape-e_2.jpg" height="200px" /> | <img src="assets/model_sdxl-shape-e_2.jpg" height="200px" /> | <img src="assets/model_sdxl-dreamgaussian_2.jpg" height="200px" /> | <img src="assets/model_sdxl-instantmesh_2.jpg" height="200px" /> |
 | A hamburger, 3d model ||||
 
 ## Implementations
