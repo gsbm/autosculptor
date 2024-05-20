@@ -10,7 +10,7 @@ bl_info = {
     "category": "Object",
     "description": "Generate 3D models using generative models.",
     "author": "Greenmagenta",
-    "version": (1, 2, 0),
+    "version": (1, 3, 0),
     "location": "View3D > Sidebar > Autosculptor",
     "support": "COMMUNITY",
     "doc_url": "https://github.com/greenmagenta/autosculptor",
@@ -92,6 +92,8 @@ class GeneratorOperator(bpy.types.Operator):
             return self.generate_sdxl_dreamgaussian_model(prompt, seed, guidance_scale, num_inference_steps)
         elif model_type == "model-sdxl-instantmesh":
             return self.generate_sdxl_instantmesh_model(prompt, seed, guidance_scale, num_inference_steps)
+        elif model_type == "model-sdxl-triposr":
+            return self.generate_sdxl_triposr_model(prompt, seed, guidance_scale, num_inference_steps)
         return None
 
     # Function to generate Shape-E model
@@ -109,7 +111,7 @@ class GeneratorOperator(bpy.types.Operator):
     # Function to generate SDXL + Shape-E model
     def generate_sdxl_shape_e_model(self, prompt, seed, guidance_scale, num_inference_steps):
         client1 = Client("ByteDance/Hyper-SDXL-1Step-T2I")
-        result = client1.predict(
+        image = client1.predict(
             num_images=1,
             height=1024,
             width=1024,
@@ -117,7 +119,7 @@ class GeneratorOperator(bpy.types.Operator):
             seed=seed,
             api_name="/process_image"
         )
-        image_path = result[0]['image']
+        image_path = image[0]['image']
 
         client2 = Client("https://one-2-3-45-one-2-3-45.hf.space/")
         segmented_img_filepath = client2.predict(image_path, api_name="/preprocess")
@@ -135,7 +137,7 @@ class GeneratorOperator(bpy.types.Operator):
     # Function to generate SDXL + DreamGaussian model
     def generate_sdxl_dreamgaussian_model(self, prompt, seed, guidance_scale, num_inference_steps):
         client1 = Client("ByteDance/Hyper-SDXL-1Step-T2I")
-        result = client1.predict(
+        image = client1.predict(
             num_images=1,
             height=1024,
             width=1024,
@@ -143,7 +145,7 @@ class GeneratorOperator(bpy.types.Operator):
             seed=seed,
             api_name="/process_image"
         )
-        image_path = result[0]['image']
+        image_path = image[0]['image']
 
         client2 = Client("https://one-2-3-45-one-2-3-45.hf.space/")
         elevation_angle_deg = client2.predict(image_path, True, api_name="/estimate_elevation")
@@ -158,7 +160,7 @@ class GeneratorOperator(bpy.types.Operator):
     # Function to generate SDXL + InstantMesh model
     def generate_sdxl_instantmesh_model(self, prompt, seed, guidance_scale, num_inference_steps):
         client1 = Client("ByteDance/Hyper-SDXL-1Step-T2I")
-        result = client1.predict(
+        image = client1.predict(
             num_images=1,
             height=1024,
             width=1024,
@@ -166,23 +168,52 @@ class GeneratorOperator(bpy.types.Operator):
             seed=seed,
             api_name="/process_image"
         )
-        image_path = result[0]['image']
+        image_path = image[0]['image']
 
         client2 = Client("TencentARC/InstantMesh")
-        preprocessed_image = client2.predict(
+        processed_image = client2.predict(
             input_image=file(image_path),
             do_remove_background=True,
             api_name="/preprocess"
         )
 
         mvs = client2.predict(
-            input_image=file(preprocessed_image),
+            input_image=file(processed_image),
             sample_steps=num_inference_steps,
             sample_seed=seed,
             api_name="/generate_mvs"
         )
 
         result = client2.predict(api_name="/make3d")
+        return result[1]
+    
+    # Function to generate SDXL + InstantMesh model
+    def generate_sdxl_triposr_model(self, prompt, seed, guidance_scale, num_inference_steps):
+        client1 = Client("ByteDance/Hyper-SDXL-1Step-T2I")
+        image = client1.predict(
+            num_images=1,
+            height=1024,
+            width=1024,
+            prompt=prompt,
+            seed=seed,
+            api_name="/process_image"
+        )
+        image_path = image[0]['image']
+
+        client2 = Client("stabilityai/TripoSR")
+        processed_image = client2.predict(
+            image_path,
+            True,
+            0.5,
+            api_name="/preprocess"
+        )
+        
+        result = client2.predict(
+            processed_image,
+            320,
+            api_name="/generate"
+        )
+
         return result[1]
 
     # Function to assign material to the imported object
@@ -285,7 +316,8 @@ class GeneratorProperties(bpy.types.PropertyGroup):
             ("model-shape-e", "Shap-E", "hysts/Shap-E (~13s)"),
             ("model-sdxl-shape-e", "SDXL + Shap-E", "ByteDance/Hyper-SDXL-1Step-T2I + hysts/Shap-E (~30s)"),
             ("model-sdxl-dreamgaussian", "SDXL + DreamGaussian", "ByteDance/Hyper-SDXL-1Step-T2I + jiawei011/dreamgaussian (~600s)"),
-            ("model-sdxl-instantmesh", "SDXL + InstantMesh", "ByteDance/Hyper-SDXL-1Step-T2I + TencentARC/InstantMesh (~60s)")
+            ("model-sdxl-instantmesh", "SDXL + InstantMesh", "ByteDance/Hyper-SDXL-1Step-T2I + TencentARC/InstantMesh (~60s)"),
+            ("model-sdxl-triposr", "SDXL + TripoSR", "ByteDance/Hyper-SDXL-1Step-T2I + stabilityai/TripoSR (~30s)")
         ],
         default="model-shape-e"
     )
