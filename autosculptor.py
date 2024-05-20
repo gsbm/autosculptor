@@ -1,6 +1,7 @@
 import bpy
 import random
 from gradio_client import Client, file
+import requests
 
 # Blender add-on information
 bl_info = {
@@ -29,6 +30,8 @@ class GeneratorOperator(bpy.types.Operator):
 
         # Get properties from user input
         prompt = autosculptor_props.prompt
+        if autosculptor_props.prompt_enhancer:
+            prompt = self.enhance_prompt(prompt)
         seed = autosculptor_props.seed
         if autosculptor_props.random_seed:
             seed = random.randint(0, 2147483647)
@@ -65,6 +68,18 @@ class GeneratorOperator(bpy.types.Operator):
         self.assign_material(obj)
 
         return {'FINISHED'}
+
+    # Function to call the prompt enhancer API
+    def enhance_prompt(self, prompt):
+        response = requests.post(
+            "https://gustavosta-magicprompt-stable-diffusion.hf.space/api/predict",
+            json={"data": [prompt + ", 3d model"]}
+        )
+        if response.status_code == 200:
+            enhanced_prompt = response.json().get('data', [None])[0]
+            if enhanced_prompt:
+                return enhanced_prompt.split("\n")[0]
+        return prompt
 
     # Function to generate the model based on the type
     def generate_model(self, prompt, seed, guidance_scale, num_inference_steps, model_type):
@@ -210,6 +225,7 @@ class GeneratorPanel(bpy.types.Panel):
 
         # Add properties to the UI
         layout.prop(autosculptor_props, "prompt")
+        layout.prop(autosculptor_props, "prompt_enhancer")
         layout.prop(autosculptor_props, "seed")
         layout.prop(autosculptor_props, "random_seed")
         layout.prop(autosculptor_props, "guidance_scale")
@@ -220,6 +236,7 @@ class GeneratorPanel(bpy.types.Panel):
 # Property group for user input
 class GeneratorProperties(bpy.types.PropertyGroup):
     prompt: bpy.props.StringProperty(name="Prompt")
+    prompt_enhancer: bpy.props.BoolProperty(name="Prompt Enhancer", default=False)
     seed: bpy.props.IntProperty(name="Seed", default=0, min=0, max=2147483647)
     random_seed: bpy.props.BoolProperty(name="Random Seed", default=True)
     guidance_scale: bpy.props.IntProperty(name="Guidance Scale", default=15, min=1, max=20)
