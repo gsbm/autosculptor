@@ -58,4 +58,8 @@ Currently working on other implementations like :
 
 ## License
 
-[GPL-3.0](https://github.com/greenmagenta/autosculptor/LICENSE/) License
+This project is licensed under [GPL-3.0](https://github.com/greenmagenta/autosculptor/LICENSE/) License.
+
+### Warning
+
+Before using this addon, please be aware that different models used in this project may have their own specific licenses and usage terms. It is your responsibility to review and comply with the licenses of each model to ensure that your use case is permitted. Failure to do so may result in legal consequences. Always verify the licensing terms of the models you intend to use.
