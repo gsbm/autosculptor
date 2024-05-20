@@ -44,12 +44,17 @@ If you still have trouble installing Gradio to Blender python, please check [thi
 
 ## Available models
 
+| <img src="assets/model_shape-e.jpg" height="200px" /> | <img src="assets/model_sdxl-shape-e.jpg" height="200px" /> | <img src="assets/model_sdxl-dreamgaussian.jpg" height="200px" /> | <img src="assets/model_sdxl-instantmesh.jpg" height="200px" /> |
+|---|---|---|---|
+| Shap-E | SDXL + Shape-E | SDXL + DreamGaussian | SDXL + InstantMesh |
+
+
 | Model | Host | Average generation time |
 |---|---|---|
 | [Shap-E](https://github.com/openai/shap-e) | [hysts/Shap-E](https://huggingface.co/spaces/hysts/Shap-E) | ~13s |
-| [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) + [Shap-E](https://github.com/openai/shap-e) | [hysts/SDXL](https://huggingface.co/spaces/hysts/SDXL) + [hysts/Shap-E](https://huggingface.co/spaces/hysts/Shap-E) | ~30s |
-| [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) + [DreamGaussian](https://github.com/dreamgaussian/dreamgaussian) | [hysts/SDXL](https://huggingface.co/spaces/hysts/SDXL) + [jiawei011/dreamgaussian](https://huggingface.co/spaces/jiawei011/dreamgaussian) | ~600s |
-| [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) + [InstantMesh](https://github.com/TencentARC/InstantMesh) | [hysts/SDXL](https://huggingface.co/spaces/hysts/SDXL) + [TencentARC/InstantMesh](https://huggingface.co/spaces/TencentARC/InstantMesh) | ~60s |
+| [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) + [Shap-E](https://github.com/openai/shap-e) | [zhuguangbin86/stabilityai-stable-diffusion-xl-base-1.0](https://huggingface.co/spaces/zhuguangbin86/stabilityai-stable-diffusion-xl-base-1.0) + [hysts/Shap-E](https://huggingface.co/spaces/hysts/Shap-E) | ~30s |
+| [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) + [DreamGaussian](https://github.com/dreamgaussian/dreamgaussian) | [zhuguangbin86/stabilityai-stable-diffusion-xl-base-1.0](https://huggingface.co/spaces/zhuguangbin86/stabilityai-stable-diffusion-xl-base-1.0) + [jiawei011/dreamgaussian](https://huggingface.co/spaces/jiawei011/dreamgaussian) | ~600s |
+| [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) + [InstantMesh](https://github.com/TencentARC/InstantMesh) | [zhuguangbin86/stabilityai-stable-diffusion-xl-base-1.0](https://huggingface.co/spaces/zhuguangbin86/stabilityai-stable-diffusion-xl-base-1.0) + [TencentARC/InstantMesh](https://huggingface.co/spaces/TencentARC/InstantMesh) | ~60s |
 
 
 ## Implementations
