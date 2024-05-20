@@ -8,7 +8,7 @@ bl_info = {
     "category": "Object",
     "description": "Generate 3D models using generative models.",
     "author": "Greenmagenta",
-    "version": (1, 0, 0),
+    "version": (1, 1, 0),
     "location": "View3D > Sidebar > Autosculptor",
     "support": "COMMUNITY",
     "doc_url": "https://github.com/greenmagenta/autosculptor",
