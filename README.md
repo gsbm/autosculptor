@@ -42,6 +42,10 @@ $ ./python -m pip install gradio_client
 ```
 If you still have trouble installing Gradio to Blender python, please check [this StackExchange thread](https://blender.stackexchange.com/questions/5287/using-3rd-party-python-modules).
 
+### Installing development version
+
+For latest features not yet implemented in stable version, you can download the development version available in [Development Branch](https://github.com/greenmagenta/autosculptor/tree/development). Please note that the stability of these versions cannot be guaranteed.
+
 ## Available models
 
 | Model | Host | Average generation time |
