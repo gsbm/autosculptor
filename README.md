@@ -64,6 +64,15 @@ For latest features not yet implemented in stable version, you can download the 
 | <img src="assets/model_shape-e_2.jpg" height="200px" /> | <img src="assets/model_sdxl-shape-e_2.jpg" height="200px" /> | <img src="assets/model_sdxl-dreamgaussian_2.jpg" height="200px" /> | <img src="assets/model_sdxl-instantmesh_2.jpg" height="200px" /> |
 | A hamburger, 3d model ||||
 
+### Prompt Enhancer
+
+Prompt enhancer requests [gustavosta-magicprompt-stable-diffusion](https://gustavosta-magicprompt-stable-diffusion.hf.space/api/predict) for generating a extended prompt more adapted to 3D model generation.
+
+| Prompt | Standard (SDXL + InstantMesh) | Prompt Enhanced (SDXL + InstantMesh) |
+|---|---|---|
+| A orange cat | <img src="assets/not_pe_1.jpg" height="200px" /> | <img src="assets/pe_1.jpg" height="200px" /> |
+| A orange cat, photorealistic | <img src="assets/not_pe_2.jpg" height="200px" /> | <img src="assets/pe_2.jpg" height="200px" /> |
+
 ## Implementations
 
 Currently working on other implementations like :
