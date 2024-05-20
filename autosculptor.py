@@ -22,6 +22,7 @@ bl_info = {
 class GeneratorOperator(bpy.types.Operator):
     bl_idname = "object.autosculptor_model_generator"
     bl_label = "Generate 3D Model"
+    bl_description = "Generate a 3D model based on the provided prompt and settings"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
@@ -242,14 +243,44 @@ class GeneratorPanel(bpy.types.Panel):
 
 # Property group for user input
 class GeneratorProperties(bpy.types.PropertyGroup):
-    prompt: bpy.props.StringProperty(name="Prompt")
-    prompt_enhancer: bpy.props.BoolProperty(name="Prompt Enhancer", default=False)
-    seed: bpy.props.IntProperty(name="Seed", default=0, min=0, max=2147483647)
-    random_seed: bpy.props.BoolProperty(name="Random Seed", default=True)
-    guidance_scale: bpy.props.IntProperty(name="Guidance Scale", default=15, min=1, max=20)
-    num_inference_steps: bpy.props.IntProperty(name="Inference Steps", default=64, min=2, max=100)
+    prompt: bpy.props.StringProperty(
+        name="Prompt",
+        description="The text prompt describing the 3D model to generate"
+    )
+    prompt_enhancer: bpy.props.BoolProperty(
+        name="Prompt Enhancer",
+        description="Enhance the prompt for better results",
+        default=False
+    )
+    seed: bpy.props.IntProperty(
+        name="Seed",
+        description="Seed for generation",
+        default=0,
+        min=0,
+        max=2147483647
+    )
+    random_seed: bpy.props.BoolProperty(
+        name="Random Seed",
+        description="Use a random seed for each generation",
+        default=True
+    )
+    guidance_scale: bpy.props.IntProperty(
+        name="Guidance Scale",
+        description="Scale for the guidance during generation",
+        default=15,
+        min=1,
+        max=20
+    )
+    num_inference_steps: bpy.props.IntProperty(
+        name="Inference Steps",
+        description="Number of inference steps for generation",
+        default=64,
+        min=2,
+        max=100
+    )
     model_type: bpy.props.EnumProperty(
         name="Model",
+        description="Model pipeline to use for generation",
         items=[
             ("model-shape-e", "Shap-E", "hysts/Shap-E (~13s)"),
             ("model-sdxl-shape-e", "SDXL + Shap-E", "ByteDance/Hyper-SDXL-1Step-T2I + hysts/Shap-E (~30s)"),
@@ -258,7 +289,11 @@ class GeneratorProperties(bpy.types.PropertyGroup):
         ],
         default="model-shape-e"
     )
-    show_advanced: bpy.props.BoolProperty(name="Show Advanced Settings", default=False)
+    show_advanced: bpy.props.BoolProperty(
+        name="Show Advanced Settings",
+        description="Show or hide advanced settings",
+        default=False
+    )
 
 def register():
     bpy.utils.register_class(GeneratorOperator)
