@@ -83,9 +83,16 @@ class GeneratorOperator(bpy.types.Operator):
         return result
 
     def generate_sdxl_shape_e_model(self, prompt, seed, guidance_scale, num_inference_steps):
-        client1 = Client("https://zhuguangbin86-stabilityai-stable-diffusion-xl-base-1-0.hf.space")
-        image = client1.predict(prompt, api_name="/predict")
-        image_path = image
+        client1 = Client("ByteDance/Hyper-SDXL-1Step-T2I")
+        result = client1.predict(
+            num_images=1,
+            height=1024,
+            width=1024,
+            prompt=prompt,
+            seed=seed,
+            api_name="/process_image"
+        )
+        image_path = result[0]['image']
 
         client2 = Client("https://one-2-3-45-one-2-3-45.hf.space/")
         segmented_img_filepath = client2.predict(image_path, api_name="/preprocess")
@@ -101,9 +108,16 @@ class GeneratorOperator(bpy.types.Operator):
         return result
 
     def generate_sdxl_dreamgaussian_model(self, prompt, seed, guidance_scale, num_inference_steps):
-        client1 = Client("https://zhuguangbin86-stabilityai-stable-diffusion-xl-base-1-0.hf.space")
-        image = client1.predict(prompt, api_name="/predict")
-        image_path = image
+        client1 = Client("ByteDance/Hyper-SDXL-1Step-T2I")
+        result = client1.predict(
+            num_images=1,
+            height=1024,
+            width=1024,
+            prompt=prompt,
+            seed=seed,
+            api_name="/process_image"
+        )
+        image_path = result[0]['image']
 
         client2 = Client("https://one-2-3-45-one-2-3-45.hf.space/")
         elevation_angle_deg = client2.predict(image_path, True, api_name="/estimate_elevation")
@@ -116,9 +130,16 @@ class GeneratorOperator(bpy.types.Operator):
         return result
 
     def generate_sdxl_instantmesh_model(self, prompt, seed, guidance_scale, num_inference_steps):
-        client1 = Client("https://zhuguangbin86-stabilityai-stable-diffusion-xl-base-1-0.hf.space")
-        image = client1.predict(prompt, api_name="/predict")
-        image_path = image
+        client1 = Client("ByteDance/Hyper-SDXL-1Step-T2I")
+        result = client1.predict(
+            num_images=1,
+            height=1024,
+            width=1024,
+            prompt=prompt,
+            seed=seed,
+            api_name="/process_image"
+        )
+        image_path = result[0]['image']
 
         client2 = Client("TencentARC/InstantMesh")
         preprocessed_image = client2.predict(
@@ -190,9 +211,9 @@ class GeneratorProperties(bpy.types.PropertyGroup):
         name="Model",
         items=[
             ("shape-e-text", "Shap-E", "hysts/Shap-E (~13s)"),
-            ("sdxl-shape-e", "SDXL + Shap-E", "zhuguangbin86/stabilityai-stable-diffusion-xl-base-1.0 + hysts/Shap-E (~30s)"),
-            ("sdxl-dreamgaussian", "SDXL + DreamGaussian", "zhuguangbin86/stabilityai-stable-diffusion-xl-base-1.0 + jiawei011/dreamgaussian (~600s)"),
-            ("sdxl-instantmesh", "SDXL + InstantMesh", "zhuguangbin86/stabilityai-stable-diffusion-xl-base-1.0 + TencentARC/InstantMesh (~60s)")
+            ("sdxl-shape-e", "SDXL + Shap-E", "ByteDance/Hyper-SDXL-1Step-T2I + hysts/Shap-E (~30s)"),
+            ("sdxl-dreamgaussian", "SDXL + DreamGaussian", "ByteDance/Hyper-SDXL-1Step-T2I + jiawei011/dreamgaussian (~600s)"),
+            ("sdxl-instantmesh", "SDXL + InstantMesh", "ByteDance/Hyper-SDXL-1Step-T2I + TencentARC/InstantMesh (~60s)")
         ],
         default="shape-e-text"
     )
