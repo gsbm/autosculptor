@@ -54,7 +54,7 @@ If you still have trouble installing Gradio to Blender python, please check [thi
 
 ### Examples
 
-| Shap-E | SDXL + Shape-E | SDXL + DreamGaussian | SDXL + InstantMesh | SDXL + TripoSR |
+| Shap-E | SDXL +<br>Shape-E | SDXL +<br>DreamGaussian | SDXL +<br>InstantMesh | SDXL +<br>TripoSR |
 |---|---|---|---|---|
 | <img src="assets/model_shape-e.jpg" height="150px" /> | <img src="assets/model_sdxl-shape-e.jpg" height="150px" /> | <img src="assets/model_sdxl-dreamgaussian.jpg" height="150px" /> | <img src="assets/model_sdxl-instantmesh.jpg" height="150px" /> | <img src="assets/model_sdxl-triposr.jpg" height="150px" /> |
 | A pinguin, 3d model |||||
