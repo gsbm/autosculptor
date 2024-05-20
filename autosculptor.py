@@ -57,16 +57,16 @@ class GeneratorOperator(bpy.types.Operator):
         return {'FINISHED'}
 
     def generate_model(self, prompt, seed, guidance_scale, num_inference_steps, model_type):
-        if model_type == "shape-e-text":
+        if model_type == "model-shape-e":
             return self.generate_shape_e_model(prompt, seed, guidance_scale, num_inference_steps)
 
-        elif model_type == "sdxl-shape-e":
+        elif model_type == "model-sdxl-shape-e":
             return self.generate_sdxl_shape_e_model(prompt, seed, guidance_scale, num_inference_steps)
 
-        elif model_type == "sdxl-dreamgaussian":
+        elif model_type == "model-sdxl-dreamgaussian":
             return self.generate_sdxl_dreamgaussian_model(prompt, seed, guidance_scale, num_inference_steps)
 
-        elif model_type == "sdxl-instantmesh":
+        elif model_type == "model-sdxl-instantmesh":
             return self.generate_sdxl_instantmesh_model(prompt, seed, guidance_scale, num_inference_steps)
         
         return None
@@ -210,12 +210,12 @@ class GeneratorProperties(bpy.types.PropertyGroup):
     model_type: bpy.props.EnumProperty(
         name="Model",
         items=[
-            ("shape-e-text", "Shap-E", "hysts/Shap-E (~13s)"),
-            ("sdxl-shape-e", "SDXL + Shap-E", "ByteDance/Hyper-SDXL-1Step-T2I + hysts/Shap-E (~30s)"),
-            ("sdxl-dreamgaussian", "SDXL + DreamGaussian", "ByteDance/Hyper-SDXL-1Step-T2I + jiawei011/dreamgaussian (~600s)"),
-            ("sdxl-instantmesh", "SDXL + InstantMesh", "ByteDance/Hyper-SDXL-1Step-T2I + TencentARC/InstantMesh (~60s)")
+            ("model-shape-e", "Shap-E", "hysts/Shap-E (~13s)"),
+            ("model-sdxl-shape-e", "SDXL + Shap-E", "ByteDance/Hyper-SDXL-1Step-T2I + hysts/Shap-E (~30s)"),
+            ("model-sdxl-dreamgaussian", "SDXL + DreamGaussian", "ByteDance/Hyper-SDXL-1Step-T2I + jiawei011/dreamgaussian (~600s)"),
+            ("model-sdxl-instantmesh", "SDXL + InstantMesh", "ByteDance/Hyper-SDXL-1Step-T2I + TencentARC/InstantMesh (~60s)")
         ],
-        default="shape-e-text"
+        default="model-shape-e"
     )
 
 
