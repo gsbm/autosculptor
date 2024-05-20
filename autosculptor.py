@@ -1,6 +1,7 @@
 import bpy
 import random
 from gradio_client import Client, file
+import requests
 
 # Blender add-on information
 bl_info = {
@@ -9,7 +10,7 @@ bl_info = {
     "category": "Object",
     "description": "Generate 3D models using generative models.",
     "author": "Greenmagenta",
-    "version": (1, 1, 0),
+    "version": (1, 2, 0),
     "location": "View3D > Sidebar > Autosculptor",
     "support": "COMMUNITY",
     "doc_url": "https://github.com/greenmagenta/autosculptor",
@@ -21,6 +22,7 @@ bl_info = {
 class GeneratorOperator(bpy.types.Operator):
     bl_idname = "object.autosculptor_model_generator"
     bl_label = "Generate 3D Model"
+    bl_description = "Generate a 3D model based on the provided prompt and settings"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
@@ -29,6 +31,8 @@ class GeneratorOperator(bpy.types.Operator):
 
         # Get properties from user input
         prompt = autosculptor_props.prompt
+        if autosculptor_props.prompt_enhancer:
+            prompt = self.enhance_prompt(prompt)
         seed = autosculptor_props.seed
         if autosculptor_props.random_seed:
             seed = random.randint(0, 2147483647)
@@ -65,6 +69,18 @@ class GeneratorOperator(bpy.types.Operator):
         self.assign_material(obj)
 
         return {'FINISHED'}
+
+    # Function to call the prompt enhancer API
+    def enhance_prompt(self, prompt):
+        response = requests.post(
+            "https://gustavosta-magicprompt-stable-diffusion.hf.space/api/predict",
+            json={"data": [prompt + ", 3d model"]}
+        )
+        if response.status_code == 200:
+            enhanced_prompt = response.json().get('data', [None])[0]
+            if enhanced_prompt:
+                return enhanced_prompt.split("\n")[0]
+        return prompt
 
     # Function to generate the model based on the type
     def generate_model(self, prompt, seed, guidance_scale, num_inference_steps, model_type):
@@ -208,24 +224,63 @@ class GeneratorPanel(bpy.types.Panel):
         scene = context.scene
         autosculptor_props = scene.autosculptor_props
 
-        # Add properties to the UI
+        # Add main properties to the UI
         layout.prop(autosculptor_props, "prompt")
-        layout.prop(autosculptor_props, "seed")
-        layout.prop(autosculptor_props, "random_seed")
-        layout.prop(autosculptor_props, "guidance_scale")
-        layout.prop(autosculptor_props, "num_inference_steps")
         layout.prop(autosculptor_props, "model_type")
+
+        # Create a collapsible section for advanced settings
+        box = layout.box()
+        box.prop(autosculptor_props, "show_advanced", text="Advanced Settings", emboss=False, icon='TRIA_DOWN' if autosculptor_props.show_advanced else 'TRIA_RIGHT')
+        
+        if autosculptor_props.show_advanced:
+            box.prop(autosculptor_props, "prompt_enhancer")
+            box.prop(autosculptor_props, "seed")
+            box.prop(autosculptor_props, "random_seed")
+            box.prop(autosculptor_props, "guidance_scale")
+            box.prop(autosculptor_props, "num_inference_steps")
+
         layout.operator("object.autosculptor_model_generator")
 
 # Property group for user input
 class GeneratorProperties(bpy.types.PropertyGroup):
-    prompt: bpy.props.StringProperty(name="Prompt")
-    seed: bpy.props.IntProperty(name="Seed", default=0, min=0, max=2147483647)
-    random_seed: bpy.props.BoolProperty(name="Random Seed", default=True)
-    guidance_scale: bpy.props.IntProperty(name="Guidance Scale", default=15, min=1, max=20)
-    num_inference_steps: bpy.props.IntProperty(name="Inference Steps", default=64, min=2, max=100)
+    prompt: bpy.props.StringProperty(
+        name="Prompt",
+        description="The text prompt describing the 3D model to generate"
+    )
+    prompt_enhancer: bpy.props.BoolProperty(
+        name="Prompt Enhancer",
+        description="Enhance the prompt for better results",
+        default=False
+    )
+    seed: bpy.props.IntProperty(
+        name="Seed",
+        description="Seed for generation",
+        default=0,
+        min=0,
+        max=2147483647
+    )
+    random_seed: bpy.props.BoolProperty(
+        name="Random Seed",
+        description="Use a random seed for each generation",
+        default=True
+    )
+    guidance_scale: bpy.props.IntProperty(
+        name="Guidance Scale",
+        description="Scale for the guidance during generation",
+        default=15,
+        min=1,
+        max=20
+    )
+    num_inference_steps: bpy.props.IntProperty(
+        name="Inference Steps",
+        description="Number of inference steps for generation",
+        default=64,
+        min=2,
+        max=100
+    )
     model_type: bpy.props.EnumProperty(
         name="Model",
+        description="Model pipeline to use for generation",
         items=[
             ("model-shape-e", "Shap-E", "hysts/Shap-E (~13s)"),
             ("model-sdxl-shape-e", "SDXL + Shap-E", "ByteDance/Hyper-SDXL-1Step-T2I + hysts/Shap-E (~30s)"),
@@ -233,6 +288,11 @@ class GeneratorProperties(bpy.types.PropertyGroup):
             ("model-sdxl-instantmesh", "SDXL + InstantMesh", "ByteDance/Hyper-SDXL-1Step-T2I + TencentARC/InstantMesh (~60s)")
         ],
         default="model-shape-e"
+    )
+    show_advanced: bpy.props.BoolProperty(
+        name="Show Advanced Settings",
+        description="Show or hide advanced settings",
+        default=False
     )
 
 def register():
