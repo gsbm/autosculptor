@@ -66,7 +66,7 @@ For latest features not yet implemented in stable version, you can download the 
 
 ### Prompt Enhancer
 
-Prompt enhancer requests [gustavosta-magicprompt-stable-diffusion](https://gustavosta-magicprompt-stable-diffusion.hf.space/api/predict) for generating a extended prompt more adapted to 3D model generation.
+Prompt enhancer requests [gustavosta/magicprompt-stable-diffusion](https://gustavosta-magicprompt-stable-diffusion.hf.space/) for generating a extended prompt more adapted to 3D model generation.
 
 | Prompt | Standard (SDXL + InstantMesh) | Prompt Enhanced (SDXL + InstantMesh) |
 |---|---|---|
