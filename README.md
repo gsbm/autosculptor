@@ -65,7 +65,7 @@ If you still have trouble installing Gradio to Blender python, please check [thi
 
 Prompt enhancer requests [gustavosta/magicprompt-stable-diffusion](https://gustavosta-magicprompt-stable-diffusion.hf.space/) for generating a extended prompt more adapted to 3D model generation.
 
-| Prompt | Standard (SDXL + InstantMesh) | Prompt Enhanced (SDXL + InstantMesh) |
+| Prompt | Standard<br>(SDXL + InstantMesh) | Prompt Enhanced<br>(SDXL + InstantMesh) |
 |---|---|---|
 | A orange cat | <img src="assets/not_pe_1.jpg" height="200px" /> | <img src="assets/pe_1.jpg" height="200px" /> |
 | A orange cat, photorealistic | <img src="assets/not_pe_2.jpg" height="200px" /> | <img src="assets/pe_2.jpg" height="200px" /> |
