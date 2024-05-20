@@ -52,9 +52,9 @@ If you still have trouble installing Gradio to Blender python, please check [thi
 | Model | Host | Average generation time |
 |---|---|---|
 | [Shap-E](https://github.com/openai/shap-e) | [hysts/Shap-E](https://huggingface.co/spaces/hysts/Shap-E) | ~13s |
-| [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) + [Shap-E](https://github.com/openai/shap-e) | [zhuguangbin86/stabilityai-stable-diffusion-xl-base-1.0](https://huggingface.co/spaces/zhuguangbin86/stabilityai-stable-diffusion-xl-base-1.0) + [hysts/Shap-E](https://huggingface.co/spaces/hysts/Shap-E) | ~30s |
-| [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) + [DreamGaussian](https://github.com/dreamgaussian/dreamgaussian) | [zhuguangbin86/stabilityai-stable-diffusion-xl-base-1.0](https://huggingface.co/spaces/zhuguangbin86/stabilityai-stable-diffusion-xl-base-1.0) + [jiawei011/dreamgaussian](https://huggingface.co/spaces/jiawei011/dreamgaussian) | ~600s |
-| [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) + [InstantMesh](https://github.com/TencentARC/InstantMesh) | [zhuguangbin86/stabilityai-stable-diffusion-xl-base-1.0](https://huggingface.co/spaces/zhuguangbin86/stabilityai-stable-diffusion-xl-base-1.0) + [TencentARC/InstantMesh](https://huggingface.co/spaces/TencentARC/InstantMesh) | ~60s |
+| [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) + [Shap-E](https://github.com/openai/shap-e) | [ByteDance/Hyper-SDXL-1Step-T2I](https://huggingface.co/spaces/ByteDance/Hyper-SDXL-1Step-T2I) + [hysts/Shap-E](https://huggingface.co/spaces/hysts/Shap-E) | ~30s |
+| [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) + [DreamGaussian](https://github.com/dreamgaussian/dreamgaussian) | [ByteDance/Hyper-SDXL-1Step-T2I](https://huggingface.co/spaces/ByteDance/Hyper-SDXL-1Step-T2I) + [jiawei011/dreamgaussian](https://huggingface.co/spaces/jiawei011/dreamgaussian) | ~600s |
+| [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) + [InstantMesh](https://github.com/TencentARC/InstantMesh) | [ByteDance/Hyper-SDXL-1Step-T2I](https://huggingface.co/spaces/ByteDance/Hyper-SDXL-1Step-T2I) + [TencentARC/InstantMesh](https://huggingface.co/spaces/TencentARC/InstantMesh) | ~60s |
 
 
 ## Implementations
