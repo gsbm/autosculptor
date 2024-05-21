@@ -28,7 +28,7 @@ After installation, Autosculptor is available in Blender on `View3D > Sidebar > 
 This add-on includes:
 - ⚙️ **Multiples Models**: Access different model pipelines for 3D model generation.
 - ✨ **Prompt Enhancer**: Enhance the prompt for better results adapted to 3D generation.
-- 🏭 **Batch Generation**: Generate multiples differents (if random seed) models in a row.
+- 🏭 **Batch Generation**: Generate multiples differents models in a row (if random seed enabled).
 
 ## Troubleshooting
 
