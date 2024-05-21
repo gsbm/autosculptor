@@ -56,9 +56,9 @@ If you still have trouble installing Gradio to Blender python, please check [thi
 
 | Shap-E | SDXL +<br>Shape-E | SDXL +<br>DreamGaussian | SDXL +<br>InstantMesh | SDXL +<br>TripoSR |
 |---|---|---|---|---|
-| <img src="assets/model_shape-e.jpg" height="150px" /> | <img src="assets/model_sdxl-shape-e.jpg" height="150px" /> | <img src="assets/model_sdxl-dreamgaussian.jpg" height="150px" /> | <img src="assets/model_sdxl-instantmesh.jpg" height="150px" /> | <img src="assets/model_sdxl-triposr.jpg" height="150px" /> |
+| <img src="assets/model_shape-e.jpg" width="150px" /> | <img src="assets/model_sdxl-shape-e.jpg" width="150px" /> | <img src="assets/model_sdxl-dreamgaussian.jpg" width="150px" /> | <img src="assets/model_sdxl-instantmesh.jpg" width="150px" /> | <img src="assets/model_sdxl-triposr.jpg" width="150px" /> |
 | `A pinguin, 3d model` |||||
-| <img src="assets/model_shape-e_2.jpg" height="150px" /> | <img src="assets/model_sdxl-shape-e_2.jpg" height="150px" /> | <img src="assets/model_sdxl-dreamgaussian_2.jpg" height="150px" /> | <img src="assets/model_sdxl-instantmesh_2.jpg" height="150px" /> | <img src="assets/model_sdxl-triposr_2.jpg" height="150px" /> |
+| <img src="assets/model_shape-e_2.jpg" width="150px" /> | <img src="assets/model_sdxl-shape-e_2.jpg" width="150px" /> | <img src="assets/model_sdxl-dreamgaussian_2.jpg" width="150px" /> | <img src="assets/model_sdxl-instantmesh_2.jpg" width="150px" /> | <img src="assets/model_sdxl-triposr_2.jpg" width="150px" /> |
 | `A hamburger, 3d model` |||||
 
 ### Prompt Enhancer
@@ -67,8 +67,8 @@ Prompt enhancer requests [gustavosta/magicprompt-stable-diffusion](https://gusta
 
 | Prompt | Standard<br>(SDXL + InstantMesh) | Prompt Enhanced<br>(SDXL + InstantMesh) |
 |---|---|---|
-| `A orange cat` | <img src="assets/not_pe_1.jpg" height="200px" /> | <img src="assets/pe_1.jpg" height="200px" /> |
-| `A orange cat, photorealistic` | <img src="assets/not_pe_2.jpg" height="200px" /> | <img src="assets/pe_2.jpg" height="200px" /> |
+| `A orange cat` | <img src="assets/not_pe_1.jpg" width="200px" /> | <img src="assets/pe_1.jpg" width="200px" /> |
+| `A orange cat, photorealistic` | <img src="assets/not_pe_2.jpg" width="200px" /> | <img src="assets/pe_2.jpg" width="200px" /> |
 
 ## Implementations
 
