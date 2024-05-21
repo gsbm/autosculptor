@@ -153,8 +153,6 @@ class GeneratorOperator(bpy.types.Operator):
             prompt_2="",
             negative_prompt_2="",
             seed=seed,
-            width=1024,
-            height=1024,
             guidance_scale_base=guidance_scale,
             num_inference_steps_base=num_inference_steps,
             api_name="/run"
@@ -184,8 +182,6 @@ class GeneratorOperator(bpy.types.Operator):
             prompt_2="",
             negative_prompt_2="",
             seed=seed,
-            width=1024,
-            height=1024,
             guidance_scale_base=guidance_scale,
             num_inference_steps_base=num_inference_steps,
             api_name="/run"
@@ -212,8 +208,6 @@ class GeneratorOperator(bpy.types.Operator):
             prompt_2="",
             negative_prompt_2="",
             seed=seed,
-            width=1024,
-            height=1024,
             guidance_scale_base=guidance_scale,
             num_inference_steps_base=num_inference_steps,
             api_name="/run"
@@ -247,8 +241,6 @@ class GeneratorOperator(bpy.types.Operator):
             prompt_2="",
             negative_prompt_2="",
             seed=seed,
-            width=1024,
-            height=1024,
             guidance_scale_base=guidance_scale,
             num_inference_steps_base=num_inference_steps,
             api_name="/run"
