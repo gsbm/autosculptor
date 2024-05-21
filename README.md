@@ -94,7 +94,7 @@ Currently working on other implementations like :
 - Updating displayed parameters on differents models
 - Thinking about self hosting/using more stable hosted models
 - Adding preset system
-- Adding generation progressbar/estimated generation time
+- Adding generation progressbar/estimated generation time (through Gradio Status ETA)
 
 ## License
 
