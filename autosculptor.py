@@ -60,41 +60,45 @@ class GeneratorOperator(bpy.types.Operator):
         prompt = autosculptor_props.prompt
         if autosculptor_props.prompt_enhancer:
             prompt = self.enhance_prompt(prompt)
-        seed = autosculptor_props.seed
-        if autosculptor_props.random_seed:
-            seed = random.randint(0, 2147483647)
         guidance_scale = autosculptor_props.guidance_scale
         num_inference_steps = autosculptor_props.num_inference_steps
         model_type = autosculptor_props.model_type
+        batch_count = autosculptor_props.batch_count
 
-        # Generate the 3D model
-        model_path = self.generate_model(prompt, seed, guidance_scale, num_inference_steps, model_type)
-        
-        # Handle errors in model generation
-        if not model_path:
-            self.report({'ERROR'}, "Invalid model type.")
-            return {'CANCELLED'}
+        for _ in range(batch_count):
+            # Get seed for generation
+            seed = autosculptor_props.seed
+            if autosculptor_props.random_seed:
+                seed = random.randint(0, 2147483647)
 
-        # Import the generated model into Blender
-        bpy.ops.import_scene.gltf(filepath=model_path)
-        
-        # Check if any object was imported
-        if not bpy.context.selected_objects:
-            self.report({'ERROR'}, "No object was imported.")
-            return {'CANCELLED'}
+            # Generate the 3D model
+            model_path = self.generate_model(prompt, seed, guidance_scale, num_inference_steps, model_type)
+            
+            # Handle errors in model generation
+            if not model_path:
+                self.report({'ERROR'}, "Invalid model type.")
+                return {'CANCELLED'}
 
-        # Get the imported object
-        parent_obj = bpy.context.selected_objects[0]
-        obj = next((child for child in parent_obj.children if child.type == 'MESH'), None)
-        
-        # Handle errors in finding a mesh object
-        if obj is None:
-            self.report({'ERROR'}, "No mesh object found among imported children.")
-            return {'CANCELLED'}
-        
-        # Assign material to the imported object
-        if autosculptor_props.apply_material:
-            self.assign_material(obj)
+            # Import the generated model into Blender
+            bpy.ops.import_scene.gltf(filepath=model_path)
+            
+            # Check if any object was imported
+            if not bpy.context.selected_objects:
+                self.report({'ERROR'}, "No object was imported.")
+                return {'CANCELLED'}
+
+            # Get the imported object
+            parent_obj = bpy.context.selected_objects[0]
+            obj = next((child for child in parent_obj.children if child.type == 'MESH'), None)
+            
+            # Handle errors in finding a mesh object
+            if obj is None:
+                self.report({'ERROR'}, "No mesh object found among imported children.")
+                return {'CANCELLED'}
+            
+            # Assign material to the imported object
+            if autosculptor_props.apply_material:
+                self.assign_material(obj)
 
         return {'FINISHED'}
 
@@ -326,6 +330,7 @@ class GeneratorPanel(bpy.types.Panel):
                 box.prop(autosculptor_props, "random_seed")
                 box.prop(autosculptor_props, "guidance_scale")
                 box.prop(autosculptor_props, "num_inference_steps")
+                box.prop(autosculptor_props, "batch_count")
 
             layout.operator("object.autosculptor_model_generator")
 
@@ -382,6 +387,13 @@ class GeneratorProperties(bpy.types.PropertyGroup):
             ("model-sdxl-triposr", "SDXL + TripoSR", "ByteDance/Hyper-SDXL-1Step-T2I + stabilityai/TripoSR (~30s)")
         ],
         default="model-shape-e"
+    )
+    batch_count: bpy.props.IntProperty(
+        name="Batch Count",
+        description="Number of 3D models to generate",
+        default=1,
+        min=1,
+        max=10
     )
     show_advanced: bpy.props.BoolProperty(
         name="Show Advanced Settings",
