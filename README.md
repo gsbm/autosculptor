@@ -82,10 +82,11 @@ Prompt enhancer requests [gustavosta/magicprompt-stable-diffusion](https://gusta
 ## Implementations
 
 Currently working on other implementations like :
-- Image to Mesh option
+- Adding image to Mesh option
 - Adding more Text2Mesh/Image2Mesh models
 - Updating displayed parameters on differents models
-- Self hosting/using more stable hosted models
+- Thinking about self hosting/using more stable hosted models
+- Adding preset system
 
 ## License
 
