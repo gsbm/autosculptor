@@ -23,6 +23,13 @@ This add-on integrate a built-in dependencies installer. At first use, it will a
 
 After installation, Autosculptor is available in Blender on `View3D > Sidebar > Autosculptor`. Please note that this add-on require internet to execute API requests.
 
+### Features
+
+This add-on includes:
+- ⚙️ **Multiples Models**: Access different models pipelines for 3D model generation.
+- ✨ **Prompt Enhancer**: Enhance the prompt for better results adapted to 3D generation.
+- 🏭 **Batch Generation**: Generate multiples differents (if random seed) models in a row.
+
 ## Troubleshooting
 
 ### Dependencies
