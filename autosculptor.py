@@ -93,7 +93,8 @@ class GeneratorOperator(bpy.types.Operator):
             return {'CANCELLED'}
         
         # Assign material to the imported object
-        self.assign_material(obj)
+        if autosculptor_props.apply_material:
+            self.assign_material(obj)
 
         return {'FINISHED'}
 
@@ -322,7 +323,10 @@ class GeneratorPanel(bpy.types.Panel):
             box.prop(autosculptor_props, "show_advanced", text="Advanced Settings", emboss=False, icon='TRIA_DOWN' if autosculptor_props.show_advanced else 'TRIA_RIGHT')
             
             if autosculptor_props.show_advanced:
+
                 box.prop(autosculptor_props, "prompt_enhancer")
+                box.prop(autosculptor_props, "apply_material")
+
                 row = box.row()
                 row.enabled = not autosculptor_props.random_seed
                 row.prop(autosculptor_props, "seed")
@@ -369,6 +373,11 @@ class GeneratorProperties(bpy.types.PropertyGroup):
         default=64,
         min=2,
         max=100
+    )
+    apply_material: bpy.props.BoolProperty(
+        name="Apply Material",
+        description="Apply material to the generated model",
+        default=True
     )
     model_type: bpy.props.EnumProperty(
         name="Model",
