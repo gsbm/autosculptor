@@ -114,17 +114,20 @@ class GeneratorOperator(bpy.types.Operator):
     def generate_model(self, prompt, seed, guidance_scale, num_inference_steps, model_type):
         from gradio_client import Client, file
 
-        if model_type == "model-shape-e":
-            return self.generate_shape_e_model(prompt, seed, guidance_scale, num_inference_steps)
-        elif model_type == "model-sdxl-shape-e":
-            return self.generate_sdxl_shape_e_model(prompt, seed, guidance_scale, num_inference_steps)
-        elif model_type == "model-sdxl-dreamgaussian":
-            return self.generate_sdxl_dreamgaussian_model(prompt, seed, guidance_scale, num_inference_steps)
-        elif model_type == "model-sdxl-instantmesh":
-            return self.generate_sdxl_instantmesh_model(prompt, seed, guidance_scale, num_inference_steps)
-        elif model_type == "model-sdxl-triposr":
-            return self.generate_sdxl_triposr_model(prompt, seed, guidance_scale, num_inference_steps)
-        return None
+        try:
+            if model_type == "model-shape-e":
+                return self.generate_shape_e_model(prompt, seed, guidance_scale, num_inference_steps)
+            elif model_type == "model-sdxl-shape-e":
+                return self.generate_sdxl_shape_e_model(prompt, seed, guidance_scale, num_inference_steps)
+            elif model_type == "model-sdxl-dreamgaussian":
+                return self.generate_sdxl_dreamgaussian_model(prompt, seed, guidance_scale, num_inference_steps)
+            elif model_type == "model-sdxl-instantmesh":
+                return self.generate_sdxl_instantmesh_model(prompt, seed, guidance_scale, num_inference_steps)
+            elif model_type == "model-sdxl-triposr":
+                return self.generate_sdxl_triposr_model(prompt, seed, guidance_scale, num_inference_steps)
+        except Exception as e:
+            self.report({'ERROR'}, f"An error occurred: {str(e)}. This could be due to a model hosting issue or an internet connection problem.")
+            return None
 
     # Function to generate Shape-E model
     def generate_shape_e_model(self, prompt, seed, guidance_scale, num_inference_steps):
