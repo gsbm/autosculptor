@@ -142,16 +142,20 @@ class GeneratorOperator(bpy.types.Operator):
     # Function to generate SDXL + Shape-E model
     def generate_sdxl_shape_e_model(self, prompt, seed, guidance_scale, num_inference_steps):
         from gradio_client import Client, file
-        client1 = Client("ByteDance/Hyper-SDXL-1Step-T2I")
+        client1 = Client("hysts/SDXL")
         image = client1.predict(
-            num_images=1,
-            height=1024,
-            width=1024,
             prompt=prompt,
+            negative_prompt="",
+            prompt_2="",
+            negative_prompt_2="",
             seed=seed,
-            api_name="/process_image"
+            width=1024,
+            height=1024,
+            guidance_scale_base=guidance_scale,
+            num_inference_steps_base=num_inference_steps,
+            api_name="/run"
         )
-        image_path = image[0]['image']
+        image_path = image
 
         client2 = Client("https://one-2-3-45-one-2-3-45.hf.space/")
         segmented_img_filepath = client2.predict(image_path, api_name="/preprocess")
@@ -169,16 +173,20 @@ class GeneratorOperator(bpy.types.Operator):
     # Function to generate SDXL + DreamGaussian model
     def generate_sdxl_dreamgaussian_model(self, prompt, seed, guidance_scale, num_inference_steps):
         from gradio_client import Client
-        client1 = Client("ByteDance/Hyper-SDXL-1Step-T2I")
+        client1 = Client("hysts/SDXL")
         image = client1.predict(
-            num_images=1,
-            height=1024,
-            width=1024,
             prompt=prompt,
+            negative_prompt="",
+            prompt_2="",
+            negative_prompt_2="",
             seed=seed,
-            api_name="/process_image"
+            width=1024,
+            height=1024,
+            guidance_scale_base=guidance_scale,
+            num_inference_steps_base=num_inference_steps,
+            api_name="/run"
         )
-        image_path = image[0]['image']
+        image_path = image
 
         client2 = Client("https://one-2-3-45-one-2-3-45.hf.space/")
         elevation_angle_deg = client2.predict(image_path, True, api_name="/estimate_elevation")
@@ -193,16 +201,20 @@ class GeneratorOperator(bpy.types.Operator):
     # Function to generate SDXL + InstantMesh model
     def generate_sdxl_instantmesh_model(self, prompt, seed, guidance_scale, num_inference_steps):
         from gradio_client import Client, file
-        client1 = Client("ByteDance/Hyper-SDXL-1Step-T2I")
+        client1 = Client("hysts/SDXL")
         image = client1.predict(
-            num_images=1,
-            height=1024,
-            width=1024,
             prompt=prompt,
+            negative_prompt="",
+            prompt_2="",
+            negative_prompt_2="",
             seed=seed,
-            api_name="/process_image"
+            width=1024,
+            height=1024,
+            guidance_scale_base=guidance_scale,
+            num_inference_steps_base=num_inference_steps,
+            api_name="/run"
         )
-        image_path = image[0]['image']
+        image_path = image
 
         client2 = Client("TencentARC/InstantMesh")
         processed_image = client2.predict(
@@ -224,16 +236,20 @@ class GeneratorOperator(bpy.types.Operator):
     # Function to generate SDXL + TripoSR model
     def generate_sdxl_triposr_model(self, prompt, seed, guidance_scale, num_inference_steps):
         from gradio_client import Client
-        client1 = Client("ByteDance/Hyper-SDXL-1Step-T2I")
+        client1 = Client("hysts/SDXL")
         image = client1.predict(
-            num_images=1,
-            height=1024,
-            width=1024,
             prompt=prompt,
+            negative_prompt="",
+            prompt_2="",
+            negative_prompt_2="",
             seed=seed,
-            api_name="/process_image"
+            width=1024,
+            height=1024,
+            guidance_scale_base=guidance_scale,
+            num_inference_steps_base=num_inference_steps,
+            api_name="/run"
         )
-        image_path = image[0]['image']
+        image_path = image
 
         client2 = Client("stabilityai/TripoSR")
         processed_image = client2.predict(
