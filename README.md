@@ -79,7 +79,7 @@ If you still have trouble installing Gradio to Blender python, please check [thi
 
 ### Prompt Enhancer
 
-Prompt enhancer requests [gustavosta/magicprompt-stable-diffusion](https://gustavosta-magicprompt-stable-diffusion.hf.space/) for generating an extended prompt more adapted to 3D model generation.
+Prompt enhancer requests [gustavosta/magicprompt-stable-diffusion](https://gustavosta-magicprompt-stable-diffusion.hf.space/) for generating an extended prompt more adapted to 3D model generation. Please note that Prompt Enhancer can sometimes deviate slightly from its original subject.
 
 | Prompt | Standard<br>(SDXL + InstantMesh) | Prompt Enhanced<br>(SDXL + InstantMesh) |
 |---|---|---|
