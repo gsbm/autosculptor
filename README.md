@@ -14,14 +14,20 @@
 
 ## Get started
 
-### Installing Autosculptor
+### Installation
+Download latest release in [releases page](https://github.com/greenmagenta/autosculptor/releases). Then, in Blender, go to `Preferences > Add-ons > Install` and select `autosculptor.py`. To activate it, check it in the add-on list.
 
-Download latest release in [Release page](https://github.com/greenmagenta/autosculptor/releases). Then, in Blender, go to `Preferences > Add-ons > Install` and select `autosculptor.py`.
-To activate it, check it in the Menu. If an error appear, please take a look to the following instructions.
+This add-on integrate a built-in dependencies installer. At first use, it will ask the user the consent to install complementary dependencies. This step will require internet to download and install required packages. In case of error, or for manual dependencies installation, please refer to [troubleshooting dependencies](#dependencies) section.
 
-### Installing dependencies
+### Usage
 
-This addon a use third-party Gradio Python module. To install Gradio module please refer to the following protocol to avoid any error.
+After installation, Autosculptor is available in Blender on `View3D > Sidebar > Autosculptor`. Please note that this add-on require internet to execute API requests.
+
+## Troubleshooting
+
+### Dependencies
+
+This addon the use third-party Gradio Python module. If a dependency error still occurs after complete installation, please try to reinstall Gradio module.
 
 In Blender [Python console](https://docs.blender.org/manual/en/latest/editors/python_console.html):
 ```py
@@ -37,6 +43,9 @@ $ cd /path/to/blender/python/bin
 # check if pip is installed
 $ ./python -m ensurepip
 
+# uninstall Gradio module (if applicable)
+$ ./python -m pip uninstall gradio_client
+
 # install Gradio module
 $ ./python -m pip install gradio_client
 ```
@@ -47,10 +56,10 @@ If you still have trouble installing Gradio to Blender python, please check [thi
 | Model pipeline | API Host(s) | Average generation time |
 |---|---|---|
 | [Shap-E](https://github.com/openai/shap-e) | [hysts/Shap-E](https://huggingface.co/spaces/hysts/Shap-E) | ~13s |
-| [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) + [Shap-E](https://github.com/openai/shap-e) | [ByteDance/Hyper-SDXL-1Step-T2I](https://huggingface.co/spaces/ByteDance/Hyper-SDXL-1Step-T2I) + [hysts/Shap-E](https://huggingface.co/spaces/hysts/Shap-E) | ~30s |
-| [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) + [DreamGaussian](https://github.com/dreamgaussian/dreamgaussian) | [ByteDance/Hyper-SDXL-1Step-T2I](https://huggingface.co/spaces/ByteDance/Hyper-SDXL-1Step-T2I) + [jiawei011/dreamgaussian](https://huggingface.co/spaces/jiawei011/dreamgaussian) | ~600s |
-| [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) + [InstantMesh](https://github.com/TencentARC/InstantMesh) | [ByteDance/Hyper-SDXL-1Step-T2I](https://huggingface.co/spaces/ByteDance/Hyper-SDXL-1Step-T2I) + [TencentARC/InstantMesh](https://huggingface.co/spaces/TencentARC/InstantMesh) | ~60s |
-| [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) + [TripoSR](https://github.com/VAST-AI-Research/TripoSR) | [ByteDance/Hyper-SDXL-1Step-T2I](https://huggingface.co/spaces/ByteDance/Hyper-SDXL-1Step-T2I) + [stabilityai/TripoSR](https://huggingface.co/spaces/stabilityai/TripoSR) | ~30s |
+| [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) + [Shap-E](https://github.com/openai/shap-e) | [hysts/SDXL](https://huggingface.co/spaces/hysts/SDXL) + [hysts/Shap-E](https://huggingface.co/spaces/hysts/Shap-E) | ~30s |
+| [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) + [DreamGaussian](https://github.com/dreamgaussian/dreamgaussian) | [hysts/SDXL](https://huggingface.co/spaces/hysts/SDXL) + [jiawei011/dreamgaussian](https://huggingface.co/spaces/jiawei011/dreamgaussian) | ~600s |
+| [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) + [InstantMesh](https://github.com/TencentARC/InstantMesh) | [hysts/SDXL](https://huggingface.co/spaces/hysts/SDXL) + [TencentARC/InstantMesh](https://huggingface.co/spaces/TencentARC/InstantMesh) | ~60s |
+| [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) + [TripoSR](https://github.com/VAST-AI-Research/TripoSR) | [hysts/SDXL](https://huggingface.co/spaces/hysts/SDXL) + [stabilityai/TripoSR](https://huggingface.co/spaces/stabilityai/TripoSR) | ~30s |
 
 ### Examples
 
@@ -63,7 +72,7 @@ If you still have trouble installing Gradio to Blender python, please check [thi
 
 ### Prompt Enhancer
 
-Prompt enhancer requests [gustavosta/magicprompt-stable-diffusion](https://gustavosta-magicprompt-stable-diffusion.hf.space/) for generating a extended prompt more adapted to 3D model generation.
+Prompt enhancer requests [gustavosta/magicprompt-stable-diffusion](https://gustavosta-magicprompt-stable-diffusion.hf.space/) for generating an extended prompt more adapted to 3D model generation.
 
 | Prompt | Standard<br>(SDXL + InstantMesh) | Prompt Enhanced<br>(SDXL + InstantMesh) |
 |---|---|---|
@@ -73,10 +82,11 @@ Prompt enhancer requests [gustavosta/magicprompt-stable-diffusion](https://gusta
 ## Implementations
 
 Currently working on other implementations like :
-- Image to Mesh option
+- Adding image to Mesh option
 - Adding more Text2Mesh/Image2Mesh models
 - Updating displayed parameters on differents models
-- Self hosting/using more stable hosted models
+- Thinking about self hosting/using more stable hosted models
+- Adding preset system
 
 ## License
 

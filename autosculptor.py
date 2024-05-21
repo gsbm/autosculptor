@@ -1,16 +1,19 @@
 import bpy
+import sys
+import subprocess
+import importlib
 import random
-from gradio_client import Client, file
-import requests
+from bpy.app.handlers import persistent
 
 # Blender add-on information
 bl_info = {
     "name": "Autosculptor 3D Model Generator",
+    "author": "Greenmagenta",
+    "version": (1, 4, 0),
     "blender": (2, 80, 0),
     "category": "Object",
     "description": "Generate 3D models using generative models.",
-    "author": "Greenmagenta",
-    "version": (1, 3, 0),
+    "warning": "Requires installation of dependencies",
     "location": "View3D > Sidebar > Autosculptor",
     "support": "COMMUNITY",
     "doc_url": "https://github.com/greenmagenta/autosculptor",
@@ -18,7 +21,27 @@ bl_info = {
     "isDraft": False
 }
 
-# Operator for generating 3D models
+def ensure_gradio_installed():
+    try:
+        import gradio_client
+        return True
+    except ImportError:
+        return False
+
+def install_gradio():
+    python_executable = sys.executable
+    subprocess.check_call([python_executable, '-m', 'ensurepip'])
+    subprocess.check_call([python_executable, '-m', 'pip', 'install', 'gradio_client'])
+
+class InstallDependenciesOperator(bpy.types.Operator):
+    bl_idname = "wm.install_dependencies"
+    bl_label = "Install Dependencies"
+    
+    def execute(self, context):
+        install_gradio()
+        self.report({'INFO'}, "Dependencies installed successfully. Please restart Blender.")
+        return {'FINISHED'}
+
 class GeneratorOperator(bpy.types.Operator):
     bl_idname = "object.autosculptor_model_generator"
     bl_label = "Generate 3D Model"
@@ -26,6 +49,10 @@ class GeneratorOperator(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
+        if not ensure_gradio_installed():
+            self.report({'ERROR'}, "gradio_client is not installed.")
+            return {'CANCELLED'}
+
         # Import properties from context
         autosculptor_props = context.scene.autosculptor_props
 
@@ -33,45 +60,51 @@ class GeneratorOperator(bpy.types.Operator):
         prompt = autosculptor_props.prompt
         if autosculptor_props.prompt_enhancer:
             prompt = self.enhance_prompt(prompt)
-        seed = autosculptor_props.seed
-        if autosculptor_props.random_seed:
-            seed = random.randint(0, 2147483647)
         guidance_scale = autosculptor_props.guidance_scale
         num_inference_steps = autosculptor_props.num_inference_steps
         model_type = autosculptor_props.model_type
+        batch_count = autosculptor_props.batch_count
 
-        # Generate the 3D model
-        model_path = self.generate_model(prompt, seed, guidance_scale, num_inference_steps, model_type)
-        
-        # Handle errors in model generation
-        if not model_path:
-            self.report({'ERROR'}, "Invalid model type.")
-            return {'CANCELLED'}
+        for _ in range(batch_count):
+            # Get seed for generation
+            seed = autosculptor_props.seed
+            if autosculptor_props.random_seed:
+                seed = random.randint(0, 2147483647)
 
-        # Import the generated model into Blender
-        bpy.ops.import_scene.gltf(filepath=model_path)
-        
-        # Check if any object was imported
-        if not bpy.context.selected_objects:
-            self.report({'ERROR'}, "No object was imported.")
-            return {'CANCELLED'}
+            # Generate the 3D model
+            model_path = self.generate_model(prompt, seed, guidance_scale, num_inference_steps, model_type)
+            
+            # Handle errors in model generation
+            if not model_path:
+                self.report({'ERROR'}, "Invalid model type.")
+                return {'CANCELLED'}
 
-        # Get the imported object
-        parent_obj = bpy.context.selected_objects[0]
-        obj = next((child for child in parent_obj.children if child.type == 'MESH'), None)
-        
-        # Handle errors in finding a mesh object
-        if obj is None:
-            self.report({'ERROR'}, "No mesh object found among imported children.")
-            return {'CANCELLED'}
-        
-        # Assign material to the imported object
-        self.assign_material(obj)
+            # Import the generated model into Blender
+            bpy.ops.import_scene.gltf(filepath=model_path)
+            
+            # Check if any object was imported
+            if not bpy.context.selected_objects:
+                self.report({'ERROR'}, "No object was imported.")
+                return {'CANCELLED'}
+
+            # Get the imported object
+            parent_obj = bpy.context.selected_objects[0]
+            obj = next((child for child in parent_obj.children if child.type == 'MESH'), None)
+            
+            # Handle errors in finding a mesh object
+            if obj is None:
+                self.report({'ERROR'}, "No mesh object found among imported children.")
+                return {'CANCELLED'}
+            
+            # Assign material to the imported object
+            if autosculptor_props.apply_material:
+                self.assign_material(obj)
 
         return {'FINISHED'}
 
     # Function to call the prompt enhancer API
     def enhance_prompt(self, prompt):
+        import requests
         response = requests.post(
             "https://gustavosta-magicprompt-stable-diffusion.hf.space/api/predict",
             json={"data": [prompt + ", 3d model"]}
@@ -84,20 +117,26 @@ class GeneratorOperator(bpy.types.Operator):
 
     # Function to generate the model based on the type
     def generate_model(self, prompt, seed, guidance_scale, num_inference_steps, model_type):
-        if model_type == "model-shape-e":
-            return self.generate_shape_e_model(prompt, seed, guidance_scale, num_inference_steps)
-        elif model_type == "model-sdxl-shape-e":
-            return self.generate_sdxl_shape_e_model(prompt, seed, guidance_scale, num_inference_steps)
-        elif model_type == "model-sdxl-dreamgaussian":
-            return self.generate_sdxl_dreamgaussian_model(prompt, seed, guidance_scale, num_inference_steps)
-        elif model_type == "model-sdxl-instantmesh":
-            return self.generate_sdxl_instantmesh_model(prompt, seed, guidance_scale, num_inference_steps)
-        elif model_type == "model-sdxl-triposr":
-            return self.generate_sdxl_triposr_model(prompt, seed, guidance_scale, num_inference_steps)
-        return None
+        from gradio_client import Client, file
+
+        try:
+            if model_type == "model-shape-e":
+                return self.generate_shape_e_model(prompt, seed, guidance_scale, num_inference_steps)
+            elif model_type == "model-sdxl-shape-e":
+                return self.generate_sdxl_shape_e_model(prompt, seed, guidance_scale, num_inference_steps)
+            elif model_type == "model-sdxl-dreamgaussian":
+                return self.generate_sdxl_dreamgaussian_model(prompt, seed, guidance_scale, num_inference_steps)
+            elif model_type == "model-sdxl-instantmesh":
+                return self.generate_sdxl_instantmesh_model(prompt, seed, guidance_scale, num_inference_steps)
+            elif model_type == "model-sdxl-triposr":
+                return self.generate_sdxl_triposr_model(prompt, seed, guidance_scale, num_inference_steps)
+        except Exception as e:
+            self.report({'ERROR'}, f"An error occurred: {str(e)}. This could be due to a model hosting issue or an internet connection problem.")
+            return None
 
     # Function to generate Shape-E model
     def generate_shape_e_model(self, prompt, seed, guidance_scale, num_inference_steps):
+        from gradio_client import Client
         client = Client("hysts/Shap-E")
         result = client.predict(
             prompt=prompt,
@@ -110,16 +149,19 @@ class GeneratorOperator(bpy.types.Operator):
 
     # Function to generate SDXL + Shape-E model
     def generate_sdxl_shape_e_model(self, prompt, seed, guidance_scale, num_inference_steps):
-        client1 = Client("ByteDance/Hyper-SDXL-1Step-T2I")
+        from gradio_client import Client, file
+        client1 = Client("hysts/SDXL")
         image = client1.predict(
-            num_images=1,
-            height=1024,
-            width=1024,
             prompt=prompt,
+            negative_prompt="",
+            prompt_2="",
+            negative_prompt_2="",
             seed=seed,
-            api_name="/process_image"
+            guidance_scale_base=guidance_scale,
+            num_inference_steps_base=num_inference_steps,
+            api_name="/run"
         )
-        image_path = image[0]['image']
+        image_path = image
 
         client2 = Client("https://one-2-3-45-one-2-3-45.hf.space/")
         segmented_img_filepath = client2.predict(image_path, api_name="/preprocess")
@@ -136,16 +178,19 @@ class GeneratorOperator(bpy.types.Operator):
 
     # Function to generate SDXL + DreamGaussian model
     def generate_sdxl_dreamgaussian_model(self, prompt, seed, guidance_scale, num_inference_steps):
-        client1 = Client("ByteDance/Hyper-SDXL-1Step-T2I")
+        from gradio_client import Client
+        client1 = Client("hysts/SDXL")
         image = client1.predict(
-            num_images=1,
-            height=1024,
-            width=1024,
             prompt=prompt,
+            negative_prompt="",
+            prompt_2="",
+            negative_prompt_2="",
             seed=seed,
-            api_name="/process_image"
+            guidance_scale_base=guidance_scale,
+            num_inference_steps_base=num_inference_steps,
+            api_name="/run"
         )
-        image_path = image[0]['image']
+        image_path = image
 
         client2 = Client("https://one-2-3-45-one-2-3-45.hf.space/")
         elevation_angle_deg = client2.predict(image_path, True, api_name="/estimate_elevation")
@@ -159,16 +204,19 @@ class GeneratorOperator(bpy.types.Operator):
 
     # Function to generate SDXL + InstantMesh model
     def generate_sdxl_instantmesh_model(self, prompt, seed, guidance_scale, num_inference_steps):
-        client1 = Client("ByteDance/Hyper-SDXL-1Step-T2I")
+        from gradio_client import Client, file
+        client1 = Client("hysts/SDXL")
         image = client1.predict(
-            num_images=1,
-            height=1024,
-            width=1024,
             prompt=prompt,
+            negative_prompt="",
+            prompt_2="",
+            negative_prompt_2="",
             seed=seed,
-            api_name="/process_image"
+            guidance_scale_base=guidance_scale,
+            num_inference_steps_base=num_inference_steps,
+            api_name="/run"
         )
-        image_path = image[0]['image']
+        image_path = image
 
         client2 = Client("TencentARC/InstantMesh")
         processed_image = client2.predict(
@@ -187,18 +235,21 @@ class GeneratorOperator(bpy.types.Operator):
         result = client2.predict(api_name="/make3d")
         return result[1]
     
-    # Function to generate SDXL + InstantMesh model
+    # Function to generate SDXL + TripoSR model
     def generate_sdxl_triposr_model(self, prompt, seed, guidance_scale, num_inference_steps):
-        client1 = Client("ByteDance/Hyper-SDXL-1Step-T2I")
+        from gradio_client import Client
+        client1 = Client("hysts/SDXL")
         image = client1.predict(
-            num_images=1,
-            height=1024,
-            width=1024,
             prompt=prompt,
+            negative_prompt="",
+            prompt_2="",
+            negative_prompt_2="",
             seed=seed,
-            api_name="/process_image"
+            guidance_scale_base=guidance_scale,
+            num_inference_steps_base=num_inference_steps,
+            api_name="/run"
         )
-        image_path = image[0]['image']
+        image_path = image
 
         client2 = Client("stabilityai/TripoSR")
         processed_image = client2.predict(
@@ -255,25 +306,33 @@ class GeneratorPanel(bpy.types.Panel):
         scene = context.scene
         autosculptor_props = scene.autosculptor_props
 
-        # Add main properties to the UI
-        layout.prop(autosculptor_props, "prompt")
-        layout.prop(autosculptor_props, "model_type")
-
-        # Create a collapsible section for advanced settings
-        box = layout.box()
-        box.prop(autosculptor_props, "show_advanced", text="Advanced Settings", emboss=False, icon='TRIA_DOWN' if autosculptor_props.show_advanced else 'TRIA_RIGHT')
-        
-        if autosculptor_props.show_advanced:
-            box.prop(autosculptor_props, "prompt_enhancer")
-            row = box.row()
-            row.enabled = not autosculptor_props.random_seed
-            row.prop(autosculptor_props, "seed")
+        if not ensure_gradio_installed():
+            layout.label(text="Dependencies are not installed.", icon='ERROR')
+            layout.operator("wm.install_dependencies")
+        else:
+            # Add main properties to the UI
+            layout.prop(autosculptor_props, "prompt")
+            layout.prop(autosculptor_props, "model_type")
             
-            box.prop(autosculptor_props, "random_seed")
-            box.prop(autosculptor_props, "guidance_scale")
-            box.prop(autosculptor_props, "num_inference_steps")
+            # Create a collapsible section for advanced settings
+            box = layout.box()
+            box.prop(autosculptor_props, "show_advanced", text="Advanced Settings", emboss=False, icon='TRIA_DOWN' if autosculptor_props.show_advanced else 'TRIA_RIGHT')
+            
+            if autosculptor_props.show_advanced:
 
-        layout.operator("object.autosculptor_model_generator")
+                box.prop(autosculptor_props, "prompt_enhancer")
+                box.prop(autosculptor_props, "apply_material")
+
+                row = box.row()
+                row.enabled = not autosculptor_props.random_seed
+                row.prop(autosculptor_props, "seed")
+                
+                box.prop(autosculptor_props, "random_seed")
+                box.prop(autosculptor_props, "guidance_scale")
+                box.prop(autosculptor_props, "num_inference_steps")
+                box.prop(autosculptor_props, "batch_count")
+
+            layout.operator("object.autosculptor_model_generator")
 
 # Property group for user input
 class GeneratorProperties(bpy.types.PropertyGroup):
@@ -312,6 +371,11 @@ class GeneratorProperties(bpy.types.PropertyGroup):
         min=2,
         max=100
     )
+    apply_material: bpy.props.BoolProperty(
+        name="Apply Material",
+        description="Apply material to the generated model",
+        default=True
+    )
     model_type: bpy.props.EnumProperty(
         name="Model",
         description="Model pipeline to use for generation",
@@ -324,6 +388,13 @@ class GeneratorProperties(bpy.types.PropertyGroup):
         ],
         default="model-shape-e"
     )
+    batch_count: bpy.props.IntProperty(
+        name="Batch Count",
+        description="Number of 3D models to generate",
+        default=1,
+        min=1,
+        max=10
+    )
     show_advanced: bpy.props.BoolProperty(
         name="Show Advanced Settings",
         description="Show or hide advanced settings",
@@ -333,12 +404,14 @@ class GeneratorProperties(bpy.types.PropertyGroup):
 def register():
     bpy.utils.register_class(GeneratorOperator)
     bpy.utils.register_class(GeneratorPanel)
+    bpy.utils.register_class(InstallDependenciesOperator)
     bpy.utils.register_class(GeneratorProperties)
     bpy.types.Scene.autosculptor_props = bpy.props.PointerProperty(type=GeneratorProperties)
 
 def unregister():
     bpy.utils.unregister_class(GeneratorOperator)
     bpy.utils.unregister_class(GeneratorPanel)
+    bpy.utils.unregister_class(InstallDependenciesOperator)
     bpy.utils.unregister_class(GeneratorProperties)
     del bpy.types.Scene.autosculptor_props
 
