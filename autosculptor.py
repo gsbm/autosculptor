@@ -144,9 +144,9 @@ class GeneratorOperator(bpy.types.Operator):
         from gradio_client import Client, file
 
         try:
-            if model_type == "model-shape-e":
+            if model_type == "model-shap-e":
                 return self.generate_shape_e_model(prompt, seed, guidance_scale, num_inference_steps)
-            elif model_type == "model-sdxl-shape-e":
+            elif model_type == "model-sdxl-shap-e":
                 return self.generate_sdxl_shape_e_model(prompt, seed, guidance_scale, num_inference_steps)
             elif model_type == "model-sdxl-dreamgaussian":
                 return self.generate_sdxl_dreamgaussian_model(prompt, seed, guidance_scale, num_inference_steps)
@@ -158,7 +158,7 @@ class GeneratorOperator(bpy.types.Operator):
             self.report({'ERROR'}, f"An error occurred: {str(e)}. This could be due to a model hosting issue or an internet connection problem.")
             return None
 
-    # Function to generate Shape-E model
+    # Function to generate Shap-E model
     def generate_shape_e_model(self, prompt, seed, guidance_scale, num_inference_steps):
         from gradio_client import Client
         client = Client("hysts/Shap-E")
@@ -171,7 +171,7 @@ class GeneratorOperator(bpy.types.Operator):
         )
         return result
 
-    # Function to generate SDXL + Shape-E model
+    # Function to generate SDXL + Shap-E model
     def generate_sdxl_shape_e_model(self, prompt, seed, guidance_scale, num_inference_steps):
         from gradio_client import Client, file
         client1 = Client("hysts/SDXL")
@@ -407,13 +407,13 @@ class GeneratorProperties(bpy.types.PropertyGroup):
         name="Model",
         description="Model pipeline to use for generation",
         items=[
-            ("model-shape-e", "Shap-E", "hysts/Shap-E (~13s)"),
-            ("model-sdxl-shape-e", "SDXL + Shap-E", "ByteDance/Hyper-SDXL-1Step-T2I + hysts/Shap-E (~30s)"),
-            ("model-sdxl-dreamgaussian", "SDXL + DreamGaussian", "ByteDance/Hyper-SDXL-1Step-T2I + jiawei011/dreamgaussian (~600s)"),
-            ("model-sdxl-instantmesh", "SDXL + InstantMesh", "ByteDance/Hyper-SDXL-1Step-T2I + TencentARC/InstantMesh (~60s)"),
-            ("model-sdxl-triposr", "SDXL + TripoSR", "ByteDance/Hyper-SDXL-1Step-T2I + stabilityai/TripoSR (~30s)")
+            ("model-shap-e", "Shap-E", "hysts/Shap-E (~13s)"),
+            ("model-sdxl-shap-e", "SDXL + Shap-E", "hysts/SDXL + hysts/Shap-E (~30s)"),
+            ("model-sdxl-dreamgaussian", "SDXL + DreamGaussian", "hysts/SDXL + jiawei011/dreamgaussian (~600s)"),
+            ("model-sdxl-instantmesh", "SDXL + InstantMesh", "hysts/SDXL + TencentARC/InstantMesh (~60s)"),
+            ("model-sdxl-triposr", "SDXL + TripoSR", "hysts/SDXL + stabilityai/TripoSR (~30s)")
         ],
-        default="model-shape-e"
+        default="model-shap-e"
     )
     batch_count: bpy.props.IntProperty(
         name="Batch Count",
