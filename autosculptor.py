@@ -3,13 +3,14 @@ import sys
 import subprocess
 import importlib
 import random
+import requests
 from bpy.app.handlers import persistent
 
 # Blender add-on information
 bl_info = {
     "name": "Autosculptor 3D Model Generator",
     "author": "Greenmagenta",
-    "version": (1, 4, 0),
+    "version": (1, 5, 0),
     "blender": (2, 80, 0),
     "category": "Object",
     "description": "Generate 3D models using generative models.",
@@ -21,6 +22,11 @@ bl_info = {
     "isDraft": False
 }
 
+# Script information
+__version__ = ".".join(map(str, bl_info["version"]))
+__api__ = "https://api.github.com/repos/greenmagenta/autosculptor"
+
+# Check if gradio_client is installed
 def ensure_gradio_installed():
     try:
         import gradio_client
@@ -28,10 +34,27 @@ def ensure_gradio_installed():
     except ImportError:
         return False
 
+# Install gradio_client using pip
 def install_gradio():
     python_executable = sys.executable
     subprocess.check_call([python_executable, '-m', 'ensurepip'])
     subprocess.check_call([python_executable, '-m', 'pip', 'install', 'gradio_client'])
+
+# Get the latest release version from GitHub
+def get_latest_release_version():
+    url = f"{__api__}/releases/latest"
+    response = requests.get(url)
+    if response.status_code == 200:
+        latest_release = response.json()
+        return latest_release["tag_name"]
+    return None
+
+# Check if an update is available
+def is_update_available():
+    latest_version = get_latest_release_version()
+    if latest_version and latest_version > __version__:
+        return True
+    return False
 
 class InstallDependenciesOperator(bpy.types.Operator):
     bl_idname = "wm.install_dependencies"
@@ -333,6 +356,9 @@ class GeneratorPanel(bpy.types.Panel):
                 box.prop(autosculptor_props, "batch_count")
 
             layout.operator("object.autosculptor_model_generator")
+            
+            if is_update_available():
+                layout.operator("wm.url_open", text="An update is available", icon='URL').url = "https://github.com/greenmagenta/autosculptor"
 
 # Property group for user input
 class GeneratorProperties(bpy.types.PropertyGroup):
