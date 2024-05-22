@@ -358,8 +358,11 @@ class GeneratorPanel(bpy.types.Panel):
 
             layout.operator("object.autosculptor_model_generator")
             
-            if is_update_available():
-                layout.operator("wm.url_open", text="An update is available", icon='URL').url = __repository__+"/releases/latest"
+            try:
+                if is_update_available():
+                    layout.operator("wm.url_open", text="An update is available", icon='URL').url = __repository__+"/releases/latest"
+            except Exception as e:
+                self.report({'ERROR'}, f"An error occurred: {str(e)}. Unable to check for updates.")
 
 # Property group for user input
 class GeneratorProperties(bpy.types.PropertyGroup):
