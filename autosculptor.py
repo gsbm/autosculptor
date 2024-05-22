@@ -1,9 +1,7 @@
 import bpy
 import sys
 import subprocess
-import importlib
 import random
-import requests
 from bpy.app.handlers import persistent
 
 # Blender add-on information
@@ -67,6 +65,8 @@ class GeneratorOperator(bpy.types.Operator):
         num_inference_steps = autosculptor_props.num_inference_steps
         model_type = autosculptor_props.model_type
         batch_count = autosculptor_props.batch_count
+        image_width = autosculptor_props.image_width
+        image_height = autosculptor_props.image_height
 
         for _ in range(batch_count):
             # Get seed for generation
@@ -75,7 +75,7 @@ class GeneratorOperator(bpy.types.Operator):
                 seed = random.randint(0, 2147483647)
 
             # Generate the 3D model
-            model_path = self.generate_model(prompt, seed, guidance_scale, num_inference_steps, model_type)
+            model_path = self.generate_model(prompt, seed, guidance_scale, num_inference_steps, model_type, image_width, image_height)
             
             # Handle errors in model generation
             if not model_path:
@@ -119,20 +119,20 @@ class GeneratorOperator(bpy.types.Operator):
         return prompt
 
     # Function to generate the model based on the type
-    def generate_model(self, prompt, seed, guidance_scale, num_inference_steps, model_type):
+    def generate_model(self, prompt, seed, guidance_scale, num_inference_steps, model_type, image_width, image_height):
         from gradio_client import Client, file
 
         try:
             if model_type == "model-shap-e":
                 return self.generate_shape_e_model(prompt, seed, guidance_scale, num_inference_steps)
             elif model_type == "model-sdxl-shap-e":
-                return self.generate_sdxl_shape_e_model(prompt, seed, guidance_scale, num_inference_steps)
+                return self.generate_sdxl_shape_e_model(prompt, seed, guidance_scale, num_inference_steps, image_width, image_height)
             elif model_type == "model-sdxl-dreamgaussian":
-                return self.generate_sdxl_dreamgaussian_model(prompt, seed, guidance_scale, num_inference_steps)
+                return self.generate_sdxl_dreamgaussian_model(prompt, seed, guidance_scale, num_inference_steps, image_width, image_height)
             elif model_type == "model-sdxl-instantmesh":
-                return self.generate_sdxl_instantmesh_model(prompt, seed, guidance_scale, num_inference_steps)
+                return self.generate_sdxl_instantmesh_model(prompt, seed, guidance_scale, num_inference_steps, image_width, image_height)
             elif model_type == "model-sdxl-triposr":
-                return self.generate_sdxl_triposr_model(prompt, seed, guidance_scale, num_inference_steps)
+                return self.generate_sdxl_triposr_model(prompt, seed, guidance_scale, num_inference_steps, image_width, image_height)
         except Exception as e:
             self.report({'ERROR'}, f"An error occurred: {str(e)}. This could be due to a model hosting issue or an internet connection problem.")
             return None
@@ -151,7 +151,7 @@ class GeneratorOperator(bpy.types.Operator):
         return result
 
     # Function to generate SDXL + Shap-E model
-    def generate_sdxl_shape_e_model(self, prompt, seed, guidance_scale, num_inference_steps):
+    def generate_sdxl_shape_e_model(self, prompt, seed, guidance_scale, num_inference_steps, image_width, image_height):
         from gradio_client import Client, file
         client1 = Client("hysts/SDXL")
         image = client1.predict(
@@ -162,6 +162,8 @@ class GeneratorOperator(bpy.types.Operator):
             seed=seed,
             guidance_scale_base=guidance_scale,
             num_inference_steps_base=num_inference_steps,
+            width=image_width,
+            height=image_height,
             api_name="/run"
         )
         image_path = image
@@ -180,7 +182,7 @@ class GeneratorOperator(bpy.types.Operator):
         return result
 
     # Function to generate SDXL + DreamGaussian model
-    def generate_sdxl_dreamgaussian_model(self, prompt, seed, guidance_scale, num_inference_steps):
+    def generate_sdxl_dreamgaussian_model(self, prompt, seed, guidance_scale, num_inference_steps, image_width, image_height):
         from gradio_client import Client
         client1 = Client("hysts/SDXL")
         image = client1.predict(
@@ -191,6 +193,8 @@ class GeneratorOperator(bpy.types.Operator):
             seed=seed,
             guidance_scale_base=guidance_scale,
             num_inference_steps_base=num_inference_steps,
+            width=image_width,
+            height=image_height,
             api_name="/run"
         )
         image_path = image
@@ -206,7 +210,7 @@ class GeneratorOperator(bpy.types.Operator):
         return result
 
     # Function to generate SDXL + InstantMesh model
-    def generate_sdxl_instantmesh_model(self, prompt, seed, guidance_scale, num_inference_steps):
+    def generate_sdxl_instantmesh_model(self, prompt, seed, guidance_scale, num_inference_steps, image_width, image_height):
         from gradio_client import Client, file
         client1 = Client("hysts/SDXL")
         image = client1.predict(
@@ -217,6 +221,8 @@ class GeneratorOperator(bpy.types.Operator):
             seed=seed,
             guidance_scale_base=guidance_scale,
             num_inference_steps_base=num_inference_steps,
+            width=image_width,
+            height=image_height,
             api_name="/run"
         )
         image_path = image
@@ -239,7 +245,7 @@ class GeneratorOperator(bpy.types.Operator):
         return result[1]
     
     # Function to generate SDXL + TripoSR model
-    def generate_sdxl_triposr_model(self, prompt, seed, guidance_scale, num_inference_steps):
+    def generate_sdxl_triposr_model(self, prompt, seed, guidance_scale, num_inference_steps, image_width, image_height):
         from gradio_client import Client
         client1 = Client("hysts/SDXL")
         image = client1.predict(
@@ -250,6 +256,8 @@ class GeneratorOperator(bpy.types.Operator):
             seed=seed,
             guidance_scale_base=guidance_scale,
             num_inference_steps_base=num_inference_steps,
+            width=image_width,
+            height=image_height,
             api_name="/run"
         )
         image_path = image
@@ -316,7 +324,7 @@ class GeneratorPanel(bpy.types.Panel):
             # Add main properties to the UI
             layout.prop(autosculptor_props, "prompt")
             layout.prop(autosculptor_props, "model_type")
-            
+
             # Create a collapsible section for advanced settings
             box = layout.box()
             box.prop(autosculptor_props, "show_advanced", text="Advanced Settings", emboss=False, icon='TRIA_DOWN' if autosculptor_props.show_advanced else 'TRIA_RIGHT')
@@ -333,8 +341,11 @@ class GeneratorPanel(bpy.types.Panel):
                 box.prop(autosculptor_props, "random_seed")
                 box.prop(autosculptor_props, "guidance_scale")
                 box.prop(autosculptor_props, "num_inference_steps")
+                box.prop(autosculptor_props, "image_width")
+                box.prop(autosculptor_props, "image_height")
                 box.prop(autosculptor_props, "batch_count")
 
+            layout.label(text=f"Estimated time: {autosculptor_props.estimated_time}")
             layout.operator("object.autosculptor_model_generator")
 
 # Property group for user input
@@ -374,6 +385,20 @@ class GeneratorProperties(bpy.types.PropertyGroup):
         min=2,
         max=100
     )
+    image_width: bpy.props.IntProperty(
+        name="Image Width",
+        description="Width of the generated image",
+        default=1024,
+        min=256,
+        max=1024
+    )
+    image_height: bpy.props.IntProperty(
+        name="Image Height",
+        description="Height of the generated image",
+        default=1024,
+        min=256,
+        max=1024
+    )
     apply_material: bpy.props.BoolProperty(
         name="Apply Material",
         description="Apply material to the generated model",
@@ -389,7 +414,8 @@ class GeneratorProperties(bpy.types.PropertyGroup):
             ("model-sdxl-instantmesh", "SDXL + InstantMesh", "hysts/SDXL + TencentARC/InstantMesh (~60s)"),
             ("model-sdxl-triposr", "SDXL + TripoSR", "hysts/SDXL + stabilityai/TripoSR (~30s)")
         ],
-        default="model-shap-e"
+        default="model-shap-e",
+        update=lambda self, context: self.update_estimated_time(context)
     )
     batch_count: bpy.props.IntProperty(
         name="Batch Count",
@@ -403,6 +429,21 @@ class GeneratorProperties(bpy.types.PropertyGroup):
         description="Show or hide advanced settings",
         default=False
     )
+    estimated_time: bpy.props.StringProperty(
+        name="Estimated Time",
+        description="Estimated time to generate the model",
+        default=""
+    )
+
+    def update_estimated_time(self, context):
+        model_times = {
+            "model-shap-e": "~13s",
+            "model-sdxl-shap-e": "~30s",
+            "model-sdxl-dreamgaussian": "~600s",
+            "model-sdxl-instantmesh": "~60s",
+            "model-sdxl-triposr": "~30s"
+        }
+        self.estimated_time = model_times.get(self.model_type, "Unknown")
 
 def register():
     bpy.utils.register_class(GeneratorOperator)
