@@ -12,9 +12,16 @@
   <img src="assets/example_1.png" height="300px" />
 </p>
 
+### Features
+
+- ⚙️ **Multiples Models**: Access different model pipelines for 3D model generation.
+- ✨ **Prompt Enhancer**: Enhance the prompt for better results adapted to 3D generation.
+- 🏭 **Batch Generation**: Generate multiples differents models in a row (if random seed enabled).
+
 ## Get started
 
 ### Installation
+
 Download latest release in [releases page](https://github.com/greenmagenta/autosculptor/releases). Then, in Blender, go to `Preferences > Add-ons > Install` and select `autosculptor.py`. To activate it, check it in the add-on list.
 
 This add-on integrate a built-in dependencies installer. At first use, it will ask the user the consent to install complementary dependencies. This step will require internet to download and install required packages. In case of error, or for manual dependencies installation, please refer to [troubleshooting dependencies](#dependencies) section.
@@ -23,12 +30,17 @@ This add-on integrate a built-in dependencies installer. At first use, it will a
 
 After installation, Autosculptor is available in Blender on `View3D > Sidebar > Autosculptor`. Please note that this add-on require internet to execute API requests.
 
-### Features
-
-This add-on includes:
-- ⚙️ **Multiples Models**: Access different model pipelines for 3D model generation.
-- ✨ **Prompt Enhancer**: Enhance the prompt for better results adapted to 3D generation.
-- 🏭 **Batch Generation**: Generate multiples differents models in a row (if random seed enabled).
+| Input | Type | Description |
+|---|---|---|
+| Prompt | Text | The text prompt describing the 3D model to generate |
+| Model | Select | Model pipeline to use for generation |
+| Prompt Enhancer | Checkbox | Enhance the prompt for better results |
+| Seed | Integer | Seed for generation |
+| Random Seed | Checkbox | Use a random seed for each generation |
+| Guidance Scale | Integer | Scale for the guidance during generation |
+| Inference Steps | Integer | Number of inference steps for generation |
+| Apply Material | Checkbox | Apply material to the generated model |
+| Batch Count | Integer | Number of 3D models to generate |
 
 ## Troubleshooting
 
@@ -70,7 +82,7 @@ If you still have trouble installing Gradio to Blender python, please check [thi
 
 ### Examples
 
-| Shap-E | SDXL +<br>Shape-E | SDXL +<br>DreamGaussian | SDXL +<br>InstantMesh | SDXL +<br>TripoSR |
+| Shap-E | SDXL + Shape-E | SDXL + DreamGaussian | SDXL + InstantMesh | SDXL + TripoSR |
 |---|---|---|---|---|
 | <img src="assets/model_shape-e.jpg" width="150px" /> | <img src="assets/model_sdxl-shape-e.jpg" width="150px" /> | <img src="assets/model_sdxl-dreamgaussian.jpg" width="150px" /> | <img src="assets/model_sdxl-instantmesh.jpg" width="150px" /> | <img src="assets/model_sdxl-triposr.jpg" width="150px" /> |
 | `A pinguin, 3d model` |||||
@@ -79,12 +91,12 @@ If you still have trouble installing Gradio to Blender python, please check [thi
 
 ### Prompt Enhancer
 
-Prompt enhancer requests [gustavosta/magicprompt-stable-diffusion](https://gustavosta-magicprompt-stable-diffusion.hf.space/) for generating an extended prompt more adapted to 3D model generation.
+Prompt enhancer requests [gustavosta/magicprompt-stable-diffusion](https://gustavosta-magicprompt-stable-diffusion.hf.space/) for generating an extended prompt more adapted to 3D model generation. Please note that Prompt Enhancer can sometimes deviate slightly from its original subject.
 
-| Prompt | Standard<br>(SDXL + InstantMesh) | Prompt Enhanced<br>(SDXL + InstantMesh) |
-|---|---|---|
-| `A orange cat` | <img src="assets/not_pe_1.jpg" width="200px" /> | <img src="assets/pe_1.jpg" width="200px" /> |
-| `A orange cat, photorealistic` | <img src="assets/not_pe_2.jpg" width="200px" /> | <img src="assets/pe_2.jpg" width="200px" /> |
+| Prompt | Model pipeline | Standard | Prompt Enhanced |
+|---|---|---|---|
+| `A orange cat` | SDXL + InstantMesh | <img src="assets/not_pe_1.jpg" width="200px" /> | <img src="assets/pe_1.jpg" width="200px" /> |
+| `A orange cat, photorealistic` | SDXL + InstantMesh | <img src="assets/not_pe_2.jpg" width="200px" /> | <img src="assets/pe_2.jpg" width="200px" /> |
 
 ## Implementations
 
@@ -94,6 +106,7 @@ Currently working on other implementations like :
 - Updating displayed parameters on differents models
 - Thinking about self hosting/using more stable hosted models
 - Adding preset system
+- Adding generation progressbar/estimated generation time (through Gradio Status ETA)
 
 ## License
 

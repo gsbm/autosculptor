@@ -3,15 +3,16 @@ import sys
 import subprocess
 import importlib
 import random
+import requests
 from bpy.app.handlers import persistent
 
 # Blender add-on information
 bl_info = {
     "name": "Autosculptor 3D Model Generator",
     "author": "Greenmagenta",
-    "version": (1, 4, 0),
+    "version": (1, 5, 0),
     "blender": (2, 80, 0),
-    "category": "Object",
+    "category": "Add Mesh",
     "description": "Generate 3D models using generative models.",
     "warning": "Requires installation of dependencies",
     "location": "View3D > Sidebar > Autosculptor",
@@ -21,6 +22,12 @@ bl_info = {
     "isDraft": False
 }
 
+# Script information
+__version__ = ".".join(map(str, bl_info["version"]))
+__repository__ = "https://github.com/greenmagenta/autosculptor"
+__api__ = "https://api.github.com/repos/greenmagenta/autosculptor"
+
+# Check if gradio_client is installed
 def ensure_gradio_installed():
     try:
         import gradio_client
@@ -28,10 +35,27 @@ def ensure_gradio_installed():
     except ImportError:
         return False
 
+# Install gradio_client using pip
 def install_gradio():
     python_executable = sys.executable
     subprocess.check_call([python_executable, '-m', 'ensurepip'])
     subprocess.check_call([python_executable, '-m', 'pip', 'install', 'gradio_client'])
+
+# Get the latest release version from GitHub
+def get_latest_release_version():
+    url = f"{__api__}/releases/latest"
+    response = requests.get(url)
+    if response.status_code == 200:
+        latest_release = response.json()
+        return latest_release["tag_name"]
+    return None
+
+# Check if an update is available
+def is_update_available():
+    latest_version = get_latest_release_version()
+    if latest_version and latest_version > __version__:
+        return True
+    return False
 
 class InstallDependenciesOperator(bpy.types.Operator):
     bl_idname = "wm.install_dependencies"
@@ -120,9 +144,9 @@ class GeneratorOperator(bpy.types.Operator):
         from gradio_client import Client, file
 
         try:
-            if model_type == "model-shape-e":
+            if model_type == "model-shap-e":
                 return self.generate_shape_e_model(prompt, seed, guidance_scale, num_inference_steps)
-            elif model_type == "model-sdxl-shape-e":
+            elif model_type == "model-sdxl-shap-e":
                 return self.generate_sdxl_shape_e_model(prompt, seed, guidance_scale, num_inference_steps)
             elif model_type == "model-sdxl-dreamgaussian":
                 return self.generate_sdxl_dreamgaussian_model(prompt, seed, guidance_scale, num_inference_steps)
@@ -134,7 +158,7 @@ class GeneratorOperator(bpy.types.Operator):
             self.report({'ERROR'}, f"An error occurred: {str(e)}. This could be due to a model hosting issue or an internet connection problem.")
             return None
 
-    # Function to generate Shape-E model
+    # Function to generate Shap-E model
     def generate_shape_e_model(self, prompt, seed, guidance_scale, num_inference_steps):
         from gradio_client import Client
         client = Client("hysts/Shap-E")
@@ -147,7 +171,7 @@ class GeneratorOperator(bpy.types.Operator):
         )
         return result
 
-    # Function to generate SDXL + Shape-E model
+    # Function to generate SDXL + Shap-E model
     def generate_sdxl_shape_e_model(self, prompt, seed, guidance_scale, num_inference_steps):
         from gradio_client import Client, file
         client1 = Client("hysts/SDXL")
@@ -333,6 +357,12 @@ class GeneratorPanel(bpy.types.Panel):
                 box.prop(autosculptor_props, "batch_count")
 
             layout.operator("object.autosculptor_model_generator")
+            
+            try:
+                if is_update_available():
+                    layout.operator("wm.url_open", text="An update is available", icon='URL').url = __repository__+"/releases/latest"
+            except Exception as e:
+                self.report({'ERROR'}, f"An error occurred: {str(e)}. Unable to check for updates.")
 
 # Property group for user input
 class GeneratorProperties(bpy.types.PropertyGroup):
@@ -380,13 +410,13 @@ class GeneratorProperties(bpy.types.PropertyGroup):
         name="Model",
         description="Model pipeline to use for generation",
         items=[
-            ("model-shape-e", "Shap-E", "hysts/Shap-E (~13s)"),
-            ("model-sdxl-shape-e", "SDXL + Shap-E", "ByteDance/Hyper-SDXL-1Step-T2I + hysts/Shap-E (~30s)"),
-            ("model-sdxl-dreamgaussian", "SDXL + DreamGaussian", "ByteDance/Hyper-SDXL-1Step-T2I + jiawei011/dreamgaussian (~600s)"),
-            ("model-sdxl-instantmesh", "SDXL + InstantMesh", "ByteDance/Hyper-SDXL-1Step-T2I + TencentARC/InstantMesh (~60s)"),
-            ("model-sdxl-triposr", "SDXL + TripoSR", "ByteDance/Hyper-SDXL-1Step-T2I + stabilityai/TripoSR (~30s)")
+            ("model-shap-e", "Shap-E", "hysts/Shap-E (~13s)"),
+            ("model-sdxl-shap-e", "SDXL + Shap-E", "hysts/SDXL + hysts/Shap-E (~30s)"),
+            ("model-sdxl-dreamgaussian", "SDXL + DreamGaussian", "hysts/SDXL + jiawei011/dreamgaussian (~600s)"),
+            ("model-sdxl-instantmesh", "SDXL + InstantMesh", "hysts/SDXL + TencentARC/InstantMesh (~60s)"),
+            ("model-sdxl-triposr", "SDXL + TripoSR", "hysts/SDXL + stabilityai/TripoSR (~30s)")
         ],
-        default="model-shape-e"
+        default="model-shap-e"
     )
     batch_count: bpy.props.IntProperty(
         name="Batch Count",
