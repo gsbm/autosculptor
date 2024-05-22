@@ -24,6 +24,7 @@ bl_info = {
 
 # Script information
 __version__ = ".".join(map(str, bl_info["version"]))
+__repository__ = "https://github.com/greenmagenta/autosculptor"
 __api__ = "https://api.github.com/repos/greenmagenta/autosculptor"
 
 # Check if gradio_client is installed
@@ -358,7 +359,7 @@ class GeneratorPanel(bpy.types.Panel):
             layout.operator("object.autosculptor_model_generator")
             
             if is_update_available():
-                layout.operator("wm.url_open", text="An update is available", icon='URL').url = "https://github.com/greenmagenta/autosculptor"
+                layout.operator("wm.url_open", text="An update is available", icon='URL').url = __repository__+"/releases/latest"
 
 # Property group for user input
 class GeneratorProperties(bpy.types.PropertyGroup):
