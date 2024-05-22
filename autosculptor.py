@@ -22,11 +22,6 @@ bl_info = {
     "isDraft": False
 }
 
-# Script information
-__version__ = ".".join(map(str, bl_info["version"]))
-__repository__ = "https://github.com/greenmagenta/autosculptor"
-__api__ = "https://api.github.com/repos/greenmagenta/autosculptor"
-
 # Check if gradio_client is installed
 def ensure_gradio_installed():
     try:
@@ -40,22 +35,6 @@ def install_gradio():
     python_executable = sys.executable
     subprocess.check_call([python_executable, '-m', 'ensurepip'])
     subprocess.check_call([python_executable, '-m', 'pip', 'install', 'gradio_client'])
-
-# Get the latest release version from GitHub
-def get_latest_release_version():
-    url = f"{__api__}/releases/latest"
-    response = requests.get(url)
-    if response.status_code == 200:
-        latest_release = response.json()
-        return latest_release["tag_name"]
-    return None
-
-# Check if an update is available
-def is_update_available():
-    latest_version = get_latest_release_version()
-    if latest_version and latest_version > __version__:
-        return True
-    return False
 
 class InstallDependenciesOperator(bpy.types.Operator):
     bl_idname = "wm.install_dependencies"
@@ -357,12 +336,6 @@ class GeneratorPanel(bpy.types.Panel):
                 box.prop(autosculptor_props, "batch_count")
 
             layout.operator("object.autosculptor_model_generator")
-            
-            try:
-                if is_update_available():
-                    layout.operator("wm.url_open", text="An update is available", icon='URL').url = __repository__+"/releases/latest"
-            except Exception as e:
-                self.report({'ERROR'}, f"An error occurred: {str(e)}. Unable to check for updates.")
 
 # Property group for user input
 class GeneratorProperties(bpy.types.PropertyGroup):
