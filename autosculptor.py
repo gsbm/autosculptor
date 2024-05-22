@@ -169,7 +169,10 @@ class GeneratorOperator(bpy.types.Operator):
         image_path = image
 
         client2 = Client("https://one-2-3-45-one-2-3-45.hf.space/")
-        segmented_img_filepath = client2.predict(image_path, api_name="/preprocess")
+        segmented_img_filepath = client2.predict(
+            file(image_path),
+            api_name="/preprocess"
+            )
 
         client3 = Client("hysts/Shap-E")
         result = client3.predict(
@@ -183,7 +186,7 @@ class GeneratorOperator(bpy.types.Operator):
 
     # Function to generate SDXL + DreamGaussian model
     def generate_sdxl_dreamgaussian_model(self, prompt, seed, guidance_scale, num_inference_steps, image_width, image_height):
-        from gradio_client import Client
+        from gradio_client import Client, file
         client1 = Client("hysts/SDXL")
         image = client1.predict(
             prompt=prompt,
@@ -200,13 +203,22 @@ class GeneratorOperator(bpy.types.Operator):
         image_path = image
 
         client2 = Client("https://one-2-3-45-one-2-3-45.hf.space/")
-        elevation_angle_deg = client2.predict(image_path, True, api_name="/estimate_elevation")
+        elevation_angle_deg = client2.predict(
+            file(image_path),
+            True,
+            api_name="/estimate_elevation"
+            )
 
         if elevation_angle_deg < -90 or elevation_angle_deg > 90:
             elevation_angle_deg = 0
 
         client3 = Client("https://jiawei011-dreamgaussian.hf.space/--replicas/e0l1g/")
-        result = client3.predict(image_path, True, elevation_angle_deg, fn_index=2)
+        result = client3.predict(
+            file(image_path),
+            True, 
+            elevation_angle_deg,
+            fn_index=2
+        )
         return result
 
     # Function to generate SDXL + InstantMesh model
@@ -241,12 +253,14 @@ class GeneratorOperator(bpy.types.Operator):
             api_name="/generate_mvs"
         )
 
-        result = client2.predict(api_name="/make3d")
+        result = client2.predict(
+            api_name="/make3d"
+        )
         return result[1]
     
     # Function to generate SDXL + TripoSR model
     def generate_sdxl_triposr_model(self, prompt, seed, guidance_scale, num_inference_steps, image_width, image_height):
-        from gradio_client import Client
+        from gradio_client import Client, file
         client1 = Client("hysts/SDXL")
         image = client1.predict(
             prompt=prompt,
@@ -264,14 +278,14 @@ class GeneratorOperator(bpy.types.Operator):
 
         client2 = Client("stabilityai/TripoSR")
         processed_image = client2.predict(
-            image_path,
+            file(image_path),
             True,
             0.5,
             api_name="/preprocess"
         )
         
         result = client2.predict(
-            processed_image,
+            file(processed_image),
             320,
             api_name="/generate"
         )
