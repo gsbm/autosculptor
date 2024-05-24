@@ -2,13 +2,14 @@ import bpy
 import sys
 import subprocess
 import random
+import threading
 from bpy.app.handlers import persistent
 
 # Blender add-on information
 bl_info = {
     "name": "Autosculptor 3D Model Generator",
     "author": "Greenmagenta",
-    "version": (1, 5, 0),
+    "version": (1, 6, 0),
     "blender": (2, 80, 0),
     "category": "Add Mesh",
     "description": "Generate 3D models using generative models.",
@@ -57,6 +58,15 @@ class GeneratorOperator(bpy.types.Operator):
         # Import properties from context
         autosculptor_props = context.scene.autosculptor_props
 
+        if autosculptor_props.run_in_thread:
+            thread = threading.Thread(target=self.run_pipeline, args=(autosculptor_props,))
+            thread.start()
+        else:
+            self.run_pipeline(autosculptor_props)
+
+        return {'FINISHED'}
+
+    def run_pipeline(self, autosculptor_props):
         # Get properties from user input
         prompt = autosculptor_props.prompt
         if autosculptor_props.prompt_enhancer:
@@ -80,30 +90,31 @@ class GeneratorOperator(bpy.types.Operator):
             # Handle errors in model generation
             if not model_path:
                 self.report({'ERROR'}, "Invalid model type.")
-                return {'CANCELLED'}
+                return
 
-            # Import the generated model into Blender
-            bpy.ops.import_scene.gltf(filepath=model_path)
-            
-            # Check if any object was imported
-            if not bpy.context.selected_objects:
-                self.report({'ERROR'}, "No object was imported.")
-                return {'CANCELLED'}
+            bpy.app.timers.register(lambda: self.import_generated_model(model_path, autosculptor_props.apply_material), first_interval=0.1)
 
-            # Get the imported object
-            parent_obj = bpy.context.selected_objects[0]
-            obj = next((child for child in parent_obj.children if child.type == 'MESH'), None)
-            
-            # Handle errors in finding a mesh object
-            if obj is None:
-                self.report({'ERROR'}, "No mesh object found among imported children.")
-                return {'CANCELLED'}
-            
-            # Assign material to the imported object
-            if autosculptor_props.apply_material:
-                self.assign_material(obj)
+    def import_generated_model(self, model_path, apply_material):
+        # Import the generated model into Blender
+        bpy.ops.import_scene.gltf(filepath=model_path)
+        
+        # Check if any object was imported
+        if not bpy.context.selected_objects:
+            self.report({'ERROR'}, "No object was imported.")
+            return
 
-        return {'FINISHED'}
+        # Get the imported object
+        parent_obj = bpy.context.selected_objects[0]
+        obj = next((child for child in parent_obj.children if child.type == 'MESH'), None)
+        
+        # Handle errors in finding a mesh object
+        if obj is None:
+            self.report({'ERROR'}, "No mesh object found among imported children.")
+            return
+        
+        # Assign material to the imported object
+        if apply_material:
+            self.assign_material(obj)
 
     # Function to call the prompt enhancer API
     def enhance_prompt(self, prompt):
@@ -344,7 +355,6 @@ class GeneratorPanel(bpy.types.Panel):
             box.prop(autosculptor_props, "show_advanced", text="Advanced Settings", emboss=False, icon='TRIA_DOWN' if autosculptor_props.show_advanced else 'TRIA_RIGHT')
             
             if autosculptor_props.show_advanced:
-
                 box.prop(autosculptor_props, "prompt_enhancer")
                 box.prop(autosculptor_props, "apply_material")
 
@@ -357,6 +367,7 @@ class GeneratorPanel(bpy.types.Panel):
                 box.prop(autosculptor_props, "num_inference_steps")
                 box.prop(autosculptor_props, "image_width")
                 box.prop(autosculptor_props, "image_height")
+                box.prop(autosculptor_props, "run_in_thread")
                 box.prop(autosculptor_props, "batch_count")
 
             layout.label(text=f"Estimated time: {autosculptor_props.estimated_time}")
@@ -447,6 +458,11 @@ class GeneratorProperties(bpy.types.PropertyGroup):
         name="Estimated Time",
         description="Estimated time to generate the model",
         default=""
+    )
+    run_in_thread: bpy.props.BoolProperty(
+        name="Run in Thread (experimental)",
+        description="Run the model generation in a separate thread",
+        default=False
     )
 
     def update_estimated_time(self, context):
