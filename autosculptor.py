@@ -49,8 +49,14 @@ class GeneratorOperator(bpy.types.Operator):
     bl_label = "Generate 3D Model"
     bl_description = "Generate a 3D model based on the provided prompt and settings"
     bl_options = {'REGISTER', 'UNDO'}
+    
+    generating = False
 
     def execute(self, context):
+        if GeneratorOperator.generating:
+            self.report({'WARNING'}, "A model is already being generated.")
+            return {'CANCELLED'}
+
         if not ensure_gradio_installed():
             self.report({'ERROR'}, "gradio_client is not installed.")
             return {'CANCELLED'}
@@ -61,10 +67,22 @@ class GeneratorOperator(bpy.types.Operator):
         if autosculptor_props.run_in_thread:
             thread = threading.Thread(target=self.run_pipeline, args=(autosculptor_props,))
             thread.start()
+            GeneratorOperator.generating = True
+            bpy.context.window_manager.progress_begin(0, 100)
+            bpy.app.timers.register(self.check_thread, first_interval=0.1)
         else:
             self.run_pipeline(autosculptor_props)
 
         return {'FINISHED'}
+
+    def check_thread(self):
+        if not GeneratorOperator.generating:
+            bpy.context.window_manager.progress_end()
+            for area in bpy.context.screen.areas:
+                if area.type == 'VIEW_3D':
+                    area.tag_redraw()
+            return None
+        return 0.1
 
     def run_pipeline(self, autosculptor_props):
         # Get properties from user input
@@ -90,9 +108,12 @@ class GeneratorOperator(bpy.types.Operator):
             # Handle errors in model generation
             if not model_path:
                 self.report({'ERROR'}, "Invalid model type.")
+                GeneratorOperator.generating = False
                 return
 
             bpy.app.timers.register(lambda: self.import_generated_model(model_path, autosculptor_props.apply_material), first_interval=0.1)
+
+        GeneratorOperator.generating = False
 
     def import_generated_model(self, model_path, apply_material):
         # Import the generated model into Blender
@@ -371,7 +392,7 @@ class GeneratorPanel(bpy.types.Panel):
                 box.prop(autosculptor_props, "batch_count")
 
             layout.label(text=f"Estimated time: {autosculptor_props.estimated_time}")
-            layout.operator("object.autosculptor_model_generator")
+            layout.operator("object.autosculptor_model_generator", text="Generating..." if GeneratorOperator.generating else "Generate 3D Model")
 
 # Property group for user input
 class GeneratorProperties(bpy.types.PropertyGroup):
@@ -467,13 +488,15 @@ class GeneratorProperties(bpy.types.PropertyGroup):
 
     def update_estimated_time(self, context):
         model_times = {
-            "model-shap-e": "~13s",
-            "model-sdxl-shap-e": "~30s",
-            "model-sdxl-dreamgaussian": "~600s",
-            "model-sdxl-instantmesh": "~60s",
-            "model-sdxl-triposr": "~30s"
+            "model-shap-e": 13,
+            "model-sdxl-shap-e": 30,
+            "model-sdxl-dreamgaussian": 600,
+            "model-sdxl-instantmesh": 60,
+            "model-sdxl-triposr": 30
         }
-        self.estimated_time = model_times.get(self.model_type, "Unknown")
+        time_per_model = model_times.get(self.model_type, 0)
+        total_time = time_per_model * self.batch_count
+        self.estimated_time = f"~{total_time}s"
 
 def register():
     bpy.utils.register_class(GeneratorOperator)
