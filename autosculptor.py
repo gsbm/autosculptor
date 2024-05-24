@@ -392,7 +392,7 @@ class GeneratorPanel(bpy.types.Panel):
                 box.prop(autosculptor_props, "batch_count")
 
             layout.label(text=f"Estimated time: {autosculptor_props.estimated_time}")
-            layout.operator("object.autosculptor_model_generator", text="Generating..." if GeneratorOperator.generating else "Generate 3D Model")
+            layout.operator("object.autosculptor_model_generator", text="Generating..." if GeneratorOperator.generating else "Generate 3D Model", icon='MESH_DATA')
 
 # Property group for user input
 class GeneratorProperties(bpy.types.PropertyGroup):
