@@ -85,9 +85,9 @@ If you still have trouble installing Gradio to Blender python, please check [thi
 
 | Shap-E | SDXL + Shape-E | SDXL + DreamGaussian | SDXL + InstantMesh | SDXL + TripoSR |
 |---|---|---|---|---|
-| <img src="assets/model_shape-e.jpg" width="150px" /> | <img src="assets/model_sdxl-shape-e.jpg" width="150px" /> | <img src="assets/model_sdxl-dreamgaussian.jpg" width="150px" /> | <img src="assets/model_sdxl-instantmesh.jpg" width="150px" /> | <img src="assets/model_sdxl-triposr.jpg" width="150px" /> |
+| <img src="assets/model_shape-e.jpg" width="100px" /> | <img src="assets/model_sdxl-shape-e.jpg" width="100px" /> | <img src="assets/model_sdxl-dreamgaussian.jpg" width="100px" /> | <img src="assets/model_sdxl-instantmesh.jpg" width="100px" /> | <img src="assets/model_sdxl-triposr.jpg" width="100px" /> |
 | `A pinguin, 3d model` |||||
-| <img src="assets/model_shape-e_2.jpg" width="150px" /> | <img src="assets/model_sdxl-shape-e_2.jpg" width="150px" /> | <img src="assets/model_sdxl-dreamgaussian_2.jpg" width="150px" /> | <img src="assets/model_sdxl-instantmesh_2.jpg" width="150px" /> | <img src="assets/model_sdxl-triposr_2.jpg" width="150px" /> |
+| <img src="assets/model_shape-e_2.jpg" width="100px" /> | <img src="assets/model_sdxl-shape-e_2.jpg" width="100px" /> | <img src="assets/model_sdxl-dreamgaussian_2.jpg" width="100px" /> | <img src="assets/model_sdxl-instantmesh_2.jpg" width="100px" /> | <img src="assets/model_sdxl-triposr_2.jpg" width="100px" /> |
 | `A hamburger, 3d model` |||||
 
 ### Prompt Enhancer
