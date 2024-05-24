@@ -468,7 +468,8 @@ class GeneratorProperties(bpy.types.PropertyGroup):
         description="Number of 3D models to generate",
         default=1,
         min=1,
-        max=10
+        max=10,
+        update=lambda self, context: self.update_estimated_time(context)
     )
     show_advanced: bpy.props.BoolProperty(
         name="Show Advanced Settings",
