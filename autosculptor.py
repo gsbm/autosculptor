@@ -482,7 +482,7 @@ class GeneratorProperties(bpy.types.PropertyGroup):
         default=""
     )
     run_in_thread: bpy.props.BoolProperty(
-        name="Run in Thread (experimental)",
+        name="Run in Thread",
         description="Run the model generation in a separate thread",
         default=False
     )
