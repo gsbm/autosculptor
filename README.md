@@ -33,14 +33,15 @@ After installation, Autosculptor is available in Blender on `View3D > Sidebar > 
 
 | Input | Type | Description |
 |---|---|---|
-| Prompt | Text | The text prompt describing the 3D model to generate |
+| Prompt | String | The text prompt describing the 3D model to generate |
 | Model | Select | Model pipeline to use for generation |
-| Prompt Enhancer | Checkbox | Enhance the prompt for better results |
+| Prompt Enhancer | Boolean | Enhance the prompt for better results |
 | Seed | Integer | Seed for generation |
-| Random Seed | Checkbox | Use a random seed for each generation |
+| Random Seed | Boolean | Use a random seed for each generation |
 | Guidance Scale | Integer | Scale for the guidance during generation |
 | Inference Steps | Integer | Number of inference steps for generation |
-| Apply Material | Checkbox | Apply material to the generated model |
+| Apply Material | Boolean | Apply material to the generated model |
+| Run in Thread | Boolean | Run the model generation in a separate thread |
 | Batch Count | Integer | Number of 3D models to generate |
 
 ## Troubleshooting
