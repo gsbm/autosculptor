@@ -146,7 +146,7 @@ class GeneratorOperator(bpy.types.Operator):
         )
         if response.status_code == 200:
             enhanced_prompt = response.json().get('data', [None])[0]
-            if enhanced_prompt:
+            if (enhanced_prompt):
                 return enhanced_prompt.split("\n")[0]
         return prompt
 
@@ -482,7 +482,7 @@ class GeneratorProperties(bpy.types.PropertyGroup):
         default=""
     )
     run_in_thread: bpy.props.BoolProperty(
-        name="Run in Thread",
+        name="Run in Thread (experimental)",
         description="Run the model generation in a separate thread",
         default=False
     )
@@ -499,12 +499,17 @@ class GeneratorProperties(bpy.types.PropertyGroup):
         total_time = time_per_model * self.batch_count
         self.estimated_time = f"~{total_time}s"
 
+@persistent
+def update_estimated_time_on_load(dummy):
+    bpy.context.scene.autosculptor_props.update_estimated_time(bpy.context)
+
 def register():
     bpy.utils.register_class(GeneratorOperator)
     bpy.utils.register_class(GeneratorPanel)
     bpy.utils.register_class(InstallDependenciesOperator)
     bpy.utils.register_class(GeneratorProperties)
     bpy.types.Scene.autosculptor_props = bpy.props.PointerProperty(type=GeneratorProperties)
+    bpy.app.handlers.load_post.append(update_estimated_time_on_load)
 
 def unregister():
     bpy.utils.unregister_class(GeneratorOperator)
@@ -512,6 +517,7 @@ def unregister():
     bpy.utils.unregister_class(InstallDependenciesOperator)
     bpy.utils.unregister_class(GeneratorProperties)
     del bpy.types.Scene.autosculptor_props
+    bpy.app.handlers.load_post.remove(update_estimated_time_on_load)
 
 if __name__ == "__main__":
     register()
