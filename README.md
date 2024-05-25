@@ -96,6 +96,8 @@ In addition, some Spaces on which APIs are hosted can also be paused or put on s
 | `A pinguin, 3d model` |||||
 | <img src="assets/model_shape-e_2.jpg" width="100px" /> | <img src="assets/model_sdxl-shape-e_2.jpg" width="100px" /> | <img src="assets/model_sdxl-dreamgaussian_2.jpg" width="100px" /> | <img src="assets/model_sdxl-instantmesh_2.jpg" width="100px" /> | <img src="assets/model_sdxl-triposr_2.jpg" width="100px" /> |
 | `A hamburger, 3d model` |||||
+| <img src="assets/model_shape-e_3.jpg" width="100px" /> | <img src="assets/model_sdxl-shape-e_3.jpg" width="100px" /> | <img src="assets/model_sdxl-dreamgaussian_3.jpg" width="100px" /> | <img src="assets/model_sdxl-instantmesh_3.jpg" width="100px" /> | <img src="assets/model_sdxl-triposr_3.jpg" width="100px" /> |
+| `A chair, 3d model` |||||
 
 ### Prompt Enhancer
 
