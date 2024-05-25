@@ -80,13 +80,13 @@ In addition, some Spaces on which APIs are hosted can also be paused or put on s
 
 ## Available models
 
-| Model pipeline | API Host(s) | Average generation time |
-|---|---|---|
-| [Shap-E](https://github.com/openai/shap-e) | [hysts/Shap-E](https://huggingface.co/spaces/hysts/Shap-E) | ~13s |
-| [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) + [Shap-E](https://github.com/openai/shap-e) | [hysts/SDXL](https://huggingface.co/spaces/hysts/SDXL) + [hysts/Shap-E](https://huggingface.co/spaces/hysts/Shap-E) | ~30s |
-| [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) + [DreamGaussian](https://github.com/dreamgaussian/dreamgaussian) | [hysts/SDXL](https://huggingface.co/spaces/hysts/SDXL) + [jiawei011/dreamgaussian](https://huggingface.co/spaces/jiawei011/dreamgaussian) | ~600s |
-| [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) + [InstantMesh](https://github.com/TencentARC/InstantMesh) | [hysts/SDXL](https://huggingface.co/spaces/hysts/SDXL) + [TencentARC/InstantMesh](https://huggingface.co/spaces/TencentARC/InstantMesh) | ~60s |
-| [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) + [TripoSR](https://github.com/VAST-AI-Research/TripoSR) | [hysts/SDXL](https://huggingface.co/spaces/hysts/SDXL) + [stabilityai/TripoSR](https://huggingface.co/spaces/stabilityai/TripoSR) | ~30s |
+| Model | Pipeline Details | API Host(s) | Average generation time |
+|---|---|---|---|
+| Shap-E | [Shap-E](https://github.com/openai/shap-e) (mesh) | [hysts/Shap-E](https://huggingface.co/spaces/hysts/Shap-E) | ~13s |
+| SDXL + Shap-E | [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) (image) > [One-2-3-45](https://github.com/One-2-3-45/One-2-3-45) (preprocess) > [Shap-E](https://github.com/openai/shap-e) (mesh) | [hysts/SDXL](https://huggingface.co/spaces/hysts/SDXL), [hysts/Shap-E](https://huggingface.co/spaces/hysts/Shap-E), [One-2-3-45/One-2-3-45](https://huggingface.co/spaces/One-2-3-45/One-2-3-45) | ~30s |
+| SDXL + DreamGaussian | [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) (image) > [One-2-3-45](https://github.com/One-2-3-45/One-2-3-45) (elevation estimation) > [DreamGaussian](https://github.com/dreamgaussian/dreamgaussian) (mesh) | [hysts/SDXL](https://huggingface.co/spaces/hysts/SDXL), [jiawei011/dreamgaussian](https://huggingface.co/spaces/jiawei011/dreamgaussian), [One-2-3-45/One-2-3-45](https://huggingface.co/spaces/One-2-3-45/One-2-3-45) | ~600s |
+| SDXL + InstantMesh | [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) (image) > [InstantMesh](https://github.com/TencentARC/InstantMesh) (mesh) | [hysts/SDXL](https://huggingface.co/spaces/hysts/SDXL), [TencentARC/InstantMesh](https://huggingface.co/spaces/TencentARC/InstantMesh) | ~60s |
+| SDXL + TripoSR | [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) (image) > [TripoSR](https://github.com/VAST-AI-Research/TripoSR) (mesh) | [hysts/SDXL](https://huggingface.co/spaces/hysts/SDXL), [stabilityai/TripoSR](https://huggingface.co/spaces/stabilityai/TripoSR) | ~30s |
 
 ### Examples
 
@@ -101,7 +101,7 @@ In addition, some Spaces on which APIs are hosted can also be paused or put on s
 
 Prompt enhancer requests [gustavosta/magicprompt-stable-diffusion](https://gustavosta-magicprompt-stable-diffusion.hf.space/) for generating an extended prompt more adapted to 3D model generation. Please note that Prompt Enhancer can sometimes deviate slightly from its original subject.
 
-| Prompt | Model pipeline | Standard | Prompt Enhanced |
+| Prompt | Model | Standard | Prompt Enhanced |
 |---|---|---|---|
 | `A orange cat` | SDXL + InstantMesh | <img src="assets/not_pe_1.jpg" width="200px" /> | <img src="assets/pe_1.jpg" width="200px" /> |
 | `A orange cat, photorealistic` | SDXL + InstantMesh | <img src="assets/not_pe_2.jpg" width="200px" /> | <img src="assets/pe_2.jpg" width="200px" /> |
@@ -110,7 +110,6 @@ Prompt enhancer requests [gustavosta/magicprompt-stable-diffusion](https://gusta
 
 Currently working on other implementations like :
 - Adding image to Mesh option
-- Adding more Text2Mesh/Image2Mesh models
 - Updating displayed parameters on differents models
 - Thinking about self hosting/using more stable hosted models
 - Adding preset system
