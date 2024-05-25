@@ -72,6 +72,12 @@ $ ./python -m pip install gradio_client
 ```
 If you still have trouble installing Gradio to Blender python, please check [this StackExchange thread](https://blender.stackexchange.com/questions/5287/using-3rd-party-python-modules).
 
+### APIs
+
+Please note that services availability cannot be guaranteed at all times. This add-on relies entirely on community APIs, operated through Gradio clients. These APIs are hosted on [Hugging Face](https://huggingface.co/) and are therefore subject to the vagaries of (rare) outages. You can find out more about the [status of services](https://status.huggingface.co/) on their own page.
+
+In addition, some Spaces on which APIs are hosted can also be paused or put on standby at any time. To manually check the status of an individual service, please refer to the [list of API hosts](#available-models).
+
 ## Available models
 
 | Model pipeline | API Host(s) | Average generation time |
