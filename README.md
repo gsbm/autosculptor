@@ -17,6 +17,7 @@
 - ⚙️ **Multiples Models**: Access different model pipelines for 3D model generation.
 - ✨ **Prompt Enhancer**: Enhance the prompt for better results adapted to 3D generation.
 - 🏭 **Batch Generation**: Generate multiples differents models in a row (if random seed enabled).
+- 🔗 **Threading**: Run the model generation in a separate thread (to avoid the UI to freeze).
 
 ## Get started
 
@@ -32,14 +33,15 @@ After installation, Autosculptor is available in Blender on `View3D > Sidebar > 
 
 | Input | Type | Description |
 |---|---|---|
-| Prompt | Text | The text prompt describing the 3D model to generate |
+| Prompt | String | The text prompt describing the 3D model to generate |
 | Model | Select | Model pipeline to use for generation |
-| Prompt Enhancer | Checkbox | Enhance the prompt for better results |
+| Prompt Enhancer | Boolean | Enhance the prompt for better results |
 | Seed | Integer | Seed for generation |
-| Random Seed | Checkbox | Use a random seed for each generation |
+| Random Seed | Boolean | Use a random seed for each generation |
 | Guidance Scale | Integer | Scale for the guidance during generation |
 | Inference Steps | Integer | Number of inference steps for generation |
-| Apply Material | Checkbox | Apply material to the generated model |
+| Apply Material | Boolean | Apply material to the generated model |
+| Run in Thread | Boolean | Run the model generation in a separate thread |
 | Batch Count | Integer | Number of 3D models to generate |
 
 ## Troubleshooting
@@ -70,30 +72,38 @@ $ ./python -m pip install gradio_client
 ```
 If you still have trouble installing Gradio to Blender python, please check [this StackExchange thread](https://blender.stackexchange.com/questions/5287/using-3rd-party-python-modules).
 
+### APIs
+
+Please note that services availability cannot be guaranteed at all times. This add-on relies entirely on community APIs, operated through Gradio clients. These APIs are hosted on [Hugging Face](https://huggingface.co/) and are therefore subject to the vagaries of (rare) outages. You can find out more about the [status of services](https://status.huggingface.co/) on their own page.
+
+In addition, some Spaces on which APIs are hosted can also be paused or put on standby at any time. To manually check the status of an individual service, please refer to the [list of API hosts](#available-models).
+
 ## Available models
 
-| Model pipeline | API Host(s) | Average generation time |
-|---|---|---|
-| [Shap-E](https://github.com/openai/shap-e) | [hysts/Shap-E](https://huggingface.co/spaces/hysts/Shap-E) | ~13s |
-| [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) + [Shap-E](https://github.com/openai/shap-e) | [hysts/SDXL](https://huggingface.co/spaces/hysts/SDXL) + [hysts/Shap-E](https://huggingface.co/spaces/hysts/Shap-E) | ~30s |
-| [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) + [DreamGaussian](https://github.com/dreamgaussian/dreamgaussian) | [hysts/SDXL](https://huggingface.co/spaces/hysts/SDXL) + [jiawei011/dreamgaussian](https://huggingface.co/spaces/jiawei011/dreamgaussian) | ~600s |
-| [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) + [InstantMesh](https://github.com/TencentARC/InstantMesh) | [hysts/SDXL](https://huggingface.co/spaces/hysts/SDXL) + [TencentARC/InstantMesh](https://huggingface.co/spaces/TencentARC/InstantMesh) | ~60s |
-| [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) + [TripoSR](https://github.com/VAST-AI-Research/TripoSR) | [hysts/SDXL](https://huggingface.co/spaces/hysts/SDXL) + [stabilityai/TripoSR](https://huggingface.co/spaces/stabilityai/TripoSR) | ~30s |
+| Model | Pipeline Details | API Host(s) | Average generation time |
+|---|---|---|---|
+| Shap-E | [Shap-E](https://github.com/openai/shap-e) (mesh) | [hysts/Shap-E](https://huggingface.co/spaces/hysts/Shap-E) | ~13s |
+| SDXL + Shap-E | [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) (image) > [One-2-3-45](https://github.com/One-2-3-45/One-2-3-45) (preprocess) > [Shap-E](https://github.com/openai/shap-e) (mesh) | [hysts/SDXL](https://huggingface.co/spaces/hysts/SDXL), [hysts/Shap-E](https://huggingface.co/spaces/hysts/Shap-E), [One-2-3-45/One-2-3-45](https://huggingface.co/spaces/One-2-3-45/One-2-3-45) | ~30s |
+| SDXL + DreamGaussian | [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) (image) > [One-2-3-45](https://github.com/One-2-3-45/One-2-3-45) (elevation estimation) > [DreamGaussian](https://github.com/dreamgaussian/dreamgaussian) (mesh) | [hysts/SDXL](https://huggingface.co/spaces/hysts/SDXL), [jiawei011/dreamgaussian](https://huggingface.co/spaces/jiawei011/dreamgaussian), [One-2-3-45/One-2-3-45](https://huggingface.co/spaces/One-2-3-45/One-2-3-45) | ~600s |
+| SDXL + InstantMesh | [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) (image) > [InstantMesh](https://github.com/TencentARC/InstantMesh) (mesh) | [hysts/SDXL](https://huggingface.co/spaces/hysts/SDXL), [TencentARC/InstantMesh](https://huggingface.co/spaces/TencentARC/InstantMesh) | ~60s |
+| SDXL + TripoSR | [SDXL](https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0) (image) > [TripoSR](https://github.com/VAST-AI-Research/TripoSR) (mesh) | [hysts/SDXL](https://huggingface.co/spaces/hysts/SDXL), [stabilityai/TripoSR](https://huggingface.co/spaces/stabilityai/TripoSR) | ~30s |
 
 ### Examples
 
 | Shap-E | SDXL + Shape-E | SDXL + DreamGaussian | SDXL + InstantMesh | SDXL + TripoSR |
 |---|---|---|---|---|
-| <img src="assets/model_shape-e.jpg" width="150px" /> | <img src="assets/model_sdxl-shape-e.jpg" width="150px" /> | <img src="assets/model_sdxl-dreamgaussian.jpg" width="150px" /> | <img src="assets/model_sdxl-instantmesh.jpg" width="150px" /> | <img src="assets/model_sdxl-triposr.jpg" width="150px" /> |
+| <img src="assets/model_shape-e.jpg" width="100px" /> | <img src="assets/model_sdxl-shape-e.jpg" width="100px" /> | <img src="assets/model_sdxl-dreamgaussian.jpg" width="100px" /> | <img src="assets/model_sdxl-instantmesh.jpg" width="100px" /> | <img src="assets/model_sdxl-triposr.jpg" width="100px" /> |
 | `A pinguin, 3d model` |||||
-| <img src="assets/model_shape-e_2.jpg" width="150px" /> | <img src="assets/model_sdxl-shape-e_2.jpg" width="150px" /> | <img src="assets/model_sdxl-dreamgaussian_2.jpg" width="150px" /> | <img src="assets/model_sdxl-instantmesh_2.jpg" width="150px" /> | <img src="assets/model_sdxl-triposr_2.jpg" width="150px" /> |
+| <img src="assets/model_shape-e_2.jpg" width="100px" /> | <img src="assets/model_sdxl-shape-e_2.jpg" width="100px" /> | <img src="assets/model_sdxl-dreamgaussian_2.jpg" width="100px" /> | <img src="assets/model_sdxl-instantmesh_2.jpg" width="100px" /> | <img src="assets/model_sdxl-triposr_2.jpg" width="100px" /> |
 | `A hamburger, 3d model` |||||
+| <img src="assets/model_shape-e_3.jpg" width="100px" /> | <img src="assets/model_sdxl-shape-e_3.jpg" width="100px" /> | <img src="assets/model_sdxl-dreamgaussian_3.jpg" width="100px" /> | <img src="assets/model_sdxl-instantmesh_3.jpg" width="100px" /> | <img src="assets/model_sdxl-triposr_3.jpg" width="100px" /> |
+| `A chair, 3d model` |||||
 
 ### Prompt Enhancer
 
 Prompt enhancer requests [gustavosta/magicprompt-stable-diffusion](https://gustavosta-magicprompt-stable-diffusion.hf.space/) for generating an extended prompt more adapted to 3D model generation. Please note that Prompt Enhancer can sometimes deviate slightly from its original subject.
 
-| Prompt | Model pipeline | Standard | Prompt Enhanced |
+| Prompt | Model | Standard | Prompt Enhanced |
 |---|---|---|---|
 | `A orange cat` | SDXL + InstantMesh | <img src="assets/not_pe_1.jpg" width="200px" /> | <img src="assets/pe_1.jpg" width="200px" /> |
 | `A orange cat, photorealistic` | SDXL + InstantMesh | <img src="assets/not_pe_2.jpg" width="200px" /> | <img src="assets/pe_2.jpg" width="200px" /> |
@@ -102,11 +112,11 @@ Prompt enhancer requests [gustavosta/magicprompt-stable-diffusion](https://gusta
 
 Currently working on other implementations like :
 - Adding image to Mesh option
-- Adding more Text2Mesh/Image2Mesh models
 - Updating displayed parameters on differents models
 - Thinking about self hosting/using more stable hosted models
 - Adding preset system
 - Adding generation progressbar/estimated generation time (through Gradio Status ETA)
+- Making pipelines more modulable
 
 ## License
 
