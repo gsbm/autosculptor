@@ -23,7 +23,7 @@
 
 ### Installation
 
-Download latest release in [releases page](https://github.com/greenmagenta/autosculptor/releases). Then, in Blender, go to `Preferences > Add-ons > Install` and select `autosculptor.py`. To activate it, check it in the add-on list.
+Download latest release in [releases page](https://github.com/greenmagenta/autosculptor/releases). Then, in Blender, go to `Preferences > Add-ons > Install` and select `autosculptor.zip`. To activate it, check it in the add-on list.
 
 This add-on integrate a built-in dependencies installer. At first use, it will ask the user the consent to install complementary dependencies. This step will require internet to download and install required packages. In case of error, or for manual dependencies installation, please refer to [troubleshooting dependencies](#dependencies) section.
 
@@ -41,7 +41,7 @@ After installation, Autosculptor is available in Blender on `View3D > Sidebar > 
 | Guidance Scale | Integer | Scale for the guidance during generation |
 | Inference Steps | Integer | Number of inference steps for generation |
 | Apply Material | Boolean | Apply material to the generated model |
-| Run in Thread | Boolean | Run the model generation in a separate thread |
+| Run in Thread (experimental) | Boolean | Run the model generation in a separate thread |
 | Batch Count | Integer | Number of 3D models to generate |
 
 ## Troubleshooting
