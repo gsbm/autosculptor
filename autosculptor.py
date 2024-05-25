@@ -202,7 +202,7 @@ class GeneratorOperator(bpy.types.Operator):
 
         client2 = Client("https://one-2-3-45-one-2-3-45.hf.space/")
         segmented_img_filepath = client2.predict(
-            file(image_path),
+            image_path,
             api_name="/preprocess"
             )
 
@@ -236,7 +236,7 @@ class GeneratorOperator(bpy.types.Operator):
 
         client2 = Client("https://one-2-3-45-one-2-3-45.hf.space/")
         elevation_angle_deg = client2.predict(
-            file(image_path),
+            image_path,
             True,
             api_name="/estimate_elevation"
             )
@@ -244,9 +244,9 @@ class GeneratorOperator(bpy.types.Operator):
         if elevation_angle_deg < -90 or elevation_angle_deg > 90:
             elevation_angle_deg = 0
 
-        client3 = Client("https://jiawei011-dreamgaussian.hf.space/--replicas/e0l1g/")
+        client3 = Client("https://jiawei011-dreamgaussian.hf.space/--replicas/94pz9/")
         result = client3.predict(
-            file(image_path),
+            image_path,
             True, 
             elevation_angle_deg,
             fn_index=2
