@@ -114,6 +114,7 @@ Currently working on other implementations like :
 - Thinking about self hosting/using more stable hosted models
 - Adding preset system
 - Adding generation progressbar/estimated generation time (through Gradio Status ETA)
+- Making pipelines more modulable
 
 ## License
 
