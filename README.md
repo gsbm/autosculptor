@@ -43,6 +43,7 @@ After installation, Autosculptor is available in Blender on `View3D > Sidebar > 
 | Apply Material | Boolean | Apply material to the generated model |
 | Run in Thread (experimental) | Boolean | Run the model generation in a separate thread |
 | Batch Count | Integer | Number of 3D models to generate |
+| HF Token | Integer | User Access Token for Hugging Face to get a higher priority in queues |
 
 ## Troubleshooting
 
