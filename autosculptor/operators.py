@@ -120,7 +120,7 @@ class GeneratorOperator(Operator):
         return prompt
 
     def generate_model(self, prompt, seed, guidance_scale, num_inference_steps, model_type, image_width, image_height):
-        from gradio_client import Client, file
+        from gradio_client import Client, handle_file
 
         try:
             if model_type == "model-shap-e":
@@ -150,7 +150,7 @@ class GeneratorOperator(Operator):
         return result
 
     def generate_sdxl_shape_e_model(self, prompt, seed, guidance_scale, num_inference_steps, image_width, image_height):
-        from gradio_client import Client, file
+        from gradio_client import Client, handle_file
         client1 = Client("hysts/SDXL")
         image = client1.predict(
             prompt=prompt,
@@ -174,7 +174,7 @@ class GeneratorOperator(Operator):
 
         client3 = Client("hysts/Shap-E")
         result = client3.predict(
-            image=file(segmented_img_filepath),
+            image=handle_file(segmented_img_filepath),
             seed=seed,
             guidance_scale=guidance_scale,
             num_inference_steps=num_inference_steps,
@@ -183,7 +183,7 @@ class GeneratorOperator(Operator):
         return result
 
     def generate_sdxl_dreamgaussian_model(self, prompt, seed, guidance_scale, num_inference_steps, image_width, image_height):
-        from gradio_client import Client, file
+        from gradio_client import Client, handle_file
         client1 = Client("hysts/SDXL")
         image = client1.predict(
             prompt=prompt,
@@ -219,7 +219,7 @@ class GeneratorOperator(Operator):
         return result
 
     def generate_sdxl_instantmesh_model(self, prompt, seed, guidance_scale, num_inference_steps, image_width, image_height):
-        from gradio_client import Client, file
+        from gradio_client import Client, handle_file
         client1 = Client("hysts/SDXL")
         image = client1.predict(
             prompt=prompt,
@@ -237,13 +237,13 @@ class GeneratorOperator(Operator):
 
         client2 = Client("TencentARC/InstantMesh")
         processed_image = client2.predict(
-            input_image=file(image_path),
+            input_image=handle_file(image_path),
             do_remove_background=True,
             api_name="/preprocess"
         )
 
         mvs = client2.predict(
-            input_image=file(processed_image),
+            input_image=handle_file(processed_image),
             sample_steps=num_inference_steps,
             sample_seed=seed,
             api_name="/generate_mvs"
@@ -255,7 +255,7 @@ class GeneratorOperator(Operator):
         return result[1]
     
     def generate_sdxl_triposr_model(self, prompt, seed, guidance_scale, num_inference_steps, image_width, image_height):
-        from gradio_client import Client, file
+        from gradio_client import Client, handle_file
         client1 = Client("hysts/SDXL")
         image = client1.predict(
             prompt=prompt,
@@ -273,14 +273,14 @@ class GeneratorOperator(Operator):
 
         client2 = Client("stabilityai/TripoSR")
         processed_image = client2.predict(
-            file(image_path),
+            handle_file(image_path),
             True,
             0.5,
             api_name="/preprocess"
         )
         
         result = client2.predict(
-            file(processed_image),
+            handle_file(processed_image),
             320,
             api_name="/generate"
         )
