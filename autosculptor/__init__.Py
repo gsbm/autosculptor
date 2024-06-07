@@ -7,7 +7,7 @@ from bpy.app.handlers import persistent
 bl_info = {
     "name": "Autosculptor 3D Model Generator",
     "author": "Greenmagenta",
-    "version": (1, 6, 0),
+    "version": (1, 7, 0),
     "blender": (2, 80, 0),
     "category": "Add Mesh",
     "description": "Generate 3D models using generative models.",
