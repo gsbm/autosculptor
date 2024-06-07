@@ -209,7 +209,7 @@ class GeneratorOperator(Operator):
         if elevation_angle_deg < -90 or elevation_angle_deg > 90:
             elevation_angle_deg = 0
 
-        client3 = Client("https://jiawei011-dreamgaussian.hf.space/--replicas/94pz9/")
+        client3 = Client("https://jiawei011-dreamgaussian.hf.space/")
         result = client3.predict(
             image_path,
             True, 
