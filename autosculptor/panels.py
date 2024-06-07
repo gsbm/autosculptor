@@ -43,6 +43,7 @@ class GeneratorPanel(Panel):
                 box.prop(autosculptor_props, "image_height")
                 box.prop(autosculptor_props, "run_in_thread")
                 box.prop(autosculptor_props, "batch_count")
+                box.prop(autosculptor_props, "api_key")
 
             layout.label(text=f"Estimated time: {autosculptor_props.estimated_time}")
             layout.operator("object.autosculptor_model_generator", text="Generating..." if GeneratorOperator.generating else "Generate 3D Model", icon='MESH_DATA')

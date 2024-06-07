@@ -92,6 +92,11 @@ class GeneratorProperties(PropertyGroup):
         description="Run the model generation in a separate thread",
         default=False
     )
+    api_key: bpy.props.StringProperty(
+        name="HF Token",
+        description="User Access Token for Hugging Face to get a higher priority in queues",
+        default=""
+    )
 
     def update_estimated_time(self, context):
         model_times = {
