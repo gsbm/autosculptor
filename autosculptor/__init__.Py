@@ -9,7 +9,7 @@ bl_info = {
     "author": "Greenmagenta",
     "version": (1, 7, 0),
     "blender": (2, 80, 0),
-    "category": "Add Mesh",
+    "category": "3D View",
     "description": "Generate 3D models using generative models.",
     "warning": "Requires installation of dependencies",
     "location": "View3D > Sidebar > Autosculptor",
