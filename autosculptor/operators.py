@@ -67,6 +67,9 @@ class GeneratorOperator(Operator):
         image_height = autosculptor_props.image_height
         api_key = autosculptor_props.api_key
 
+        if api_key == "":
+            api_key = None
+
         for _ in range(batch_count):
             # Get seed for generation
             seed = autosculptor_props.seed
@@ -140,7 +143,8 @@ class GeneratorOperator(Operator):
 
     def generate_shape_e_model(self, api_key, prompt, seed, guidance_scale, num_inference_steps):
         from gradio_client import Client
-        client = Client("hysts/Shap-E", hf_token=api_key)
+        
+        client = Client("hysts/Shap-E", hf_token=api_key) if api_key else Client("hysts/Shap-E")
         result = client.predict(
             prompt=prompt,
             seed=seed,
@@ -152,7 +156,7 @@ class GeneratorOperator(Operator):
 
     def generate_sdxl_shape_e_model(self, api_key, prompt, seed, guidance_scale, num_inference_steps, image_width, image_height):
         from gradio_client import Client, handle_file
-        client1 = Client("hysts/SDXL", hf_token=api_key)
+        client1 = Client("hysts/SDXL", hf_token=api_key) if api_key else Client("hysts/SDXL")
         image = client1.predict(
             prompt=prompt,
             negative_prompt="",
@@ -167,13 +171,13 @@ class GeneratorOperator(Operator):
         )
         image_path = image
 
-        client2 = Client("https://one-2-3-45-one-2-3-45.hf.space/", hf_token=api_key)
+        client2 = Client("https://one-2-3-45-one-2-3-45.hf.space/", hf_token=api_key) if api_key else Client("https://one-2-3-45-one-2-3-45.hf.space/")
         segmented_img_filepath = client2.predict(
             image_path,
             api_name="/preprocess"
-            )
+        )
 
-        client3 = Client("hysts/Shap-E", hf_token=api_key)
+        client3 = Client("hysts/Shap-E", hf_token=api_key) if api_key else Client("hysts/Shap-E")
         result = client3.predict(
             image=handle_file(segmented_img_filepath),
             seed=seed,
@@ -185,7 +189,7 @@ class GeneratorOperator(Operator):
 
     def generate_sdxl_dreamgaussian_model(self, api_key, prompt, seed, guidance_scale, num_inference_steps, image_width, image_height):
         from gradio_client import Client, handle_file
-        client1 = Client("hysts/SDXL", hf_token=api_key)
+        client1 = Client("hysts/SDXL", hf_token=api_key) if api_key else Client("hysts/SDXL")
         image = client1.predict(
             prompt=prompt,
             negative_prompt="",
@@ -200,17 +204,17 @@ class GeneratorOperator(Operator):
         )
         image_path = image
 
-        client2 = Client("https://one-2-3-45-one-2-3-45.hf.space/", hf_token=api_key)
+        client2 = Client("https://one-2-3-45-one-2-3-45.hf.space/", hf_token=api_key) if api_key else Client("https://one-2-3-45-one-2-3-45.hf.space/")
         elevation_angle_deg = client2.predict(
             image_path,
             True,
             api_name="/estimate_elevation"
-            )
+        )
 
         if elevation_angle_deg < -90 or elevation_angle_deg > 90:
             elevation_angle_deg = 0
 
-        client3 = Client("https://jiawei011-dreamgaussian.hf.space/", hf_token=api_key)
+        client3 = Client("https://jiawei011-dreamgaussian.hf.space/", hf_token=api_key) if api_key else Client("https://jiawei011-dreamgaussian.hf.space/")
         result = client3.predict(
             image_path,
             True, 
@@ -221,7 +225,7 @@ class GeneratorOperator(Operator):
 
     def generate_sdxl_instantmesh_model(self, api_key, prompt, seed, guidance_scale, num_inference_steps, image_width, image_height):
         from gradio_client import Client, handle_file
-        client1 = Client("hysts/SDXL", hf_token=api_key)
+        client1 = Client("hysts/SDXL", hf_token=api_key) if api_key else Client("hysts/SDXL")
         image = client1.predict(
             prompt=prompt,
             negative_prompt="",
@@ -236,7 +240,7 @@ class GeneratorOperator(Operator):
         )
         image_path = image
 
-        client2 = Client("TencentARC/InstantMesh", hf_token=api_key)
+        client2 = Client("TencentARC/InstantMesh", hf_token=api_key) if api_key else Client("TencentARC/InstantMesh")
         processed_image = client2.predict(
             input_image=handle_file(image_path),
             do_remove_background=True,
@@ -257,7 +261,7 @@ class GeneratorOperator(Operator):
     
     def generate_sdxl_triposr_model(self, api_key, prompt, seed, guidance_scale, num_inference_steps, image_width, image_height):
         from gradio_client import Client, handle_file
-        client1 = Client("hysts/SDXL", hf_token=api_key)
+        client1 = Client("hysts/SDXL", hf_token=api_key) if api_key else Client("hysts/SDXL")
         image = client1.predict(
             prompt=prompt,
             negative_prompt="",
@@ -272,7 +276,7 @@ class GeneratorOperator(Operator):
         )
         image_path = image
 
-        client2 = Client("stabilityai/TripoSR", hf_token=api_key)
+        client2 = Client("stabilityai/TripoSR", hf_token=api_key) if api_key else Client("stabilityai/TripoSR")
         processed_image = client2.predict(
             handle_file(image_path),
             True,
