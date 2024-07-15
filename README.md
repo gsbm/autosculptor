@@ -43,7 +43,7 @@ After installation, Autosculptor is available in Blender on `View3D > Sidebar > 
 | Apply Material | Boolean | Apply material to the generated model |
 | Run in Thread (experimental) | Boolean | Run the model generation in a separate thread |
 | Batch Count | Integer | Number of 3D models to generate |
-| HF Token | Integer | User Access Token for Hugging Face to get a higher priority in queues |
+| HF Token | String | User Access Token for Hugging Face to get a higher priority in queues |
 
 ## Troubleshooting
 
@@ -91,7 +91,7 @@ In addition, some Spaces on which APIs are hosted can also be paused or put on s
 
 ### Examples
 
-| Shap-E | SDXL + Shape-E | SDXL + DreamGaussian | SDXL + InstantMesh | SDXL + TripoSR |
+| Shap-E | SDXL + Shap-E | SDXL + DreamGaussian | SDXL + InstantMesh | SDXL + TripoSR |
 |---|---|---|---|---|
 | <img src="assets/model_shape-e.jpg" width="100px" /> | <img src="assets/model_sdxl-shape-e.jpg" width="100px" /> | <img src="assets/model_sdxl-dreamgaussian.jpg" width="100px" /> | <img src="assets/model_sdxl-instantmesh.jpg" width="100px" /> | <img src="assets/model_sdxl-triposr.jpg" width="100px" /> |
 | `A pinguin, 3d model` |||||
