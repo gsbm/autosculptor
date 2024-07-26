@@ -6,7 +6,7 @@ from bpy.app.handlers import persistent
 
 bl_info = {
     "name": "Autosculptor 3D Model Generator",
-    "author": "Greenmagenta",
+    "author": "gsbm",
     "version": (1, 7, 0),
     "blender": (2, 80, 0),
     "category": "3D View",
@@ -14,8 +14,8 @@ bl_info = {
     "warning": "Requires installation of dependencies",
     "location": "View3D > Sidebar > Autosculptor",
     "support": "COMMUNITY",
-    "doc_url": "https://github.com/greenmagenta/autosculptor",
-    "tracker_url": "https://github.com/greenmagenta/autosculptor/issues",
+    "doc_url": "https://github.com/gsbm/autosculptor",
+    "tracker_url": "https://github.com/gsbm/autosculptor/issues",
     "isDraft": False
 }
 
