@@ -5,9 +5,9 @@ from .properties import GeneratorProperties
 from bpy.app.handlers import persistent
 
 bl_info = {
-    "name": "Autosculptor 3D Model Generator",
+    "name": "Autosculptor",
     "author": "gsbm",
-    "version": (1, 7, 0),
+    "version": (1, 8, 0),
     "blender": (2, 80, 0),
     "category": "3D View",
     "description": "Generate 3D models using generative models.",
