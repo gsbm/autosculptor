@@ -6,6 +6,16 @@ class GeneratorProperties(PropertyGroup):
         name="Prompt",
         description="The text prompt describing the 3D model to generate"
     )
+    additional_prompt: bpy.props.StringProperty(
+        name="Additional Prompt",
+        description="Additional prompt to precise the generation",
+        default="(3D model), (overall view), (white background), studio photo, blender, 3D render, large view, (single object)"
+    )
+    negative_prompt: bpy.props.StringProperty(
+        name="Negative Prompt",
+        description="Negative prompt to avoid certain generation",
+        default="longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality"
+    )
     prompt_enhancer: bpy.props.BoolProperty(
         name="Prompt Enhancer",
         description="Enhance the prompt for better results",
