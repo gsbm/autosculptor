@@ -69,6 +69,10 @@ class GeneratorOperator(Operator):
         prompt = autosculptor_props.prompt
         if autosculptor_props.prompt_enhancer:
             prompt = self.enhance_prompt(prompt)
+        additional_prompt = autosculptor_props.additional_prompt
+        if additional_prompt != "":
+            prompt += ", " + additional_prompt
+        negative_prompt = autosculptor_props.negative_prompt
         guidance_scale = autosculptor_props.guidance_scale
         num_inference_steps = autosculptor_props.num_inference_steps
         model_type = autosculptor_props.model_type
@@ -87,7 +91,7 @@ class GeneratorOperator(Operator):
                 seed = random.randint(0, 2147483647)
 
             # Generate the 3D model
-            model_path = self.generate_model(prompt, seed, guidance_scale, num_inference_steps, model_type, image_width, image_height, api_key)
+            model_path = self.generate_model(prompt, negative_prompt, seed, guidance_scale, num_inference_steps, model_type, image_width, image_height, api_key)
             
             # Handle errors in model generation
             if not model_path:
@@ -133,20 +137,20 @@ class GeneratorOperator(Operator):
                 return enhanced_prompt.split("\n")[0]
         return prompt
 
-    def generate_model(self, prompt, seed, guidance_scale, num_inference_steps, model_type, image_width, image_height, api_key):
+    def generate_model(self, prompt, negative_prompt, seed, guidance_scale, num_inference_steps, model_type, image_width, image_height, api_key):
         from gradio_client import Client, handle_file
 
         try:
             if model_type == "model-shap-e":
                 return self.generate_shape_e_model(api_key, prompt, seed, guidance_scale, num_inference_steps)
             elif model_type == "model-sdxl-shap-e":
-                return self.generate_sdxl_shape_e_model(api_key, prompt, seed, guidance_scale, num_inference_steps, image_width, image_height)
+                return self.generate_sdxl_shape_e_model(api_key, prompt, negative_prompt, seed, guidance_scale, num_inference_steps, image_width, image_height)
             elif model_type == "model-sdxl-dreamgaussian":
-                return self.generate_sdxl_dreamgaussian_model(api_key, prompt, seed, guidance_scale, num_inference_steps, image_width, image_height)
+                return self.generate_sdxl_dreamgaussian_model(api_key, prompt, negative_prompt, seed, guidance_scale, num_inference_steps, image_width, image_height)
             elif model_type == "model-sdxl-instantmesh":
-                return self.generate_sdxl_instantmesh_model(api_key, prompt, seed, guidance_scale, num_inference_steps, image_width, image_height)
+                return self.generate_sdxl_instantmesh_model(api_key, prompt, negative_prompt, seed, guidance_scale, num_inference_steps, image_width, image_height)
             elif model_type == "model-sdxl-triposr":
-                return self.generate_sdxl_triposr_model(api_key, prompt, seed, guidance_scale, num_inference_steps, image_width, image_height)
+                return self.generate_sdxl_triposr_model(api_key, prompt, negative_prompt, seed, guidance_scale, num_inference_steps, image_width, image_height)
         except Exception as e:
             self.report({'ERROR'}, f"An error occurred: {str(e)}. This could be due to a model hosting issue or an internet connection problem.")
             return None
@@ -164,12 +168,12 @@ class GeneratorOperator(Operator):
         )
         return result
 
-    def generate_sdxl_shape_e_model(self, api_key, prompt, seed, guidance_scale, num_inference_steps, image_width, image_height):
+    def generate_sdxl_shape_e_model(self, api_key, prompt, negative_prompt, seed, guidance_scale, num_inference_steps, image_width, image_height):
         from gradio_client import Client, handle_file
         client1 = Client(client_config["sdxl"], hf_token=api_key) if api_key else Client(client_config["sdxl"])
         image = client1.predict(
             prompt=prompt,
-            negative_prompt="",
+            negative_prompt=negative_prompt,
             prompt_2="",
             negative_prompt_2="",
             seed=seed,
@@ -197,12 +201,12 @@ class GeneratorOperator(Operator):
         )
         return result
 
-    def generate_sdxl_dreamgaussian_model(self, api_key, prompt, seed, guidance_scale, num_inference_steps, image_width, image_height):
+    def generate_sdxl_dreamgaussian_model(self, api_key, prompt, negative_prompt, seed, guidance_scale, num_inference_steps, image_width, image_height):
         from gradio_client import Client, handle_file
         client1 = Client(client_config["sdxl"], hf_token=api_key) if api_key else Client(client_config["sdxl"])
         image = client1.predict(
             prompt=prompt,
-            negative_prompt="",
+            negative_prompt=negative_prompt,
             prompt_2="",
             negative_prompt_2="",
             seed=seed,
@@ -233,12 +237,12 @@ class GeneratorOperator(Operator):
         )
         return result
 
-    def generate_sdxl_instantmesh_model(self, api_key, prompt, seed, guidance_scale, num_inference_steps, image_width, image_height):
+    def generate_sdxl_instantmesh_model(self, api_key, prompt, negative_prompt, seed, guidance_scale, num_inference_steps, image_width, image_height):
         from gradio_client import Client, handle_file
         client1 = Client(client_config["sdxl"], hf_token=api_key) if api_key else Client(client_config["sdxl"])
         image = client1.predict(
             prompt=prompt,
-            negative_prompt="",
+            negative_prompt=negative_prompt,
             prompt_2="",
             negative_prompt_2="",
             seed=seed,
@@ -269,12 +273,12 @@ class GeneratorOperator(Operator):
         )
         return result[1]
     
-    def generate_sdxl_triposr_model(self, api_key, prompt, seed, guidance_scale, num_inference_steps, image_width, image_height):
+    def generate_sdxl_triposr_model(self, api_key, prompt, negative_prompt, seed, guidance_scale, num_inference_steps, image_width, image_height):
         from gradio_client import Client, handle_file
         client1 = Client(client_config["sdxl"], hf_token=api_key) if api_key else Client(client_config["sdxl"])
         image = client1.predict(
             prompt=prompt,
-            negative_prompt="",
+            negative_prompt=negative_prompt,
             prompt_2="",
             negative_prompt_2="",
             seed=seed,
