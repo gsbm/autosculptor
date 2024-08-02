@@ -29,6 +29,8 @@ class GeneratorPanel(Panel):
             box.prop(autosculptor_props, "show_advanced", text="Advanced Settings", emboss=False, icon='TRIA_DOWN' if autosculptor_props.show_advanced else 'TRIA_RIGHT')
             
             if autosculptor_props.show_advanced:
+                box.prop(autosculptor_props, "additional_prompt")
+                box.prop(autosculptor_props, "negative_prompt")
                 box.prop(autosculptor_props, "prompt_enhancer")
                 box.prop(autosculptor_props, "apply_material")
 
