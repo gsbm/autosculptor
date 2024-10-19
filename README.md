@@ -79,6 +79,8 @@ Please note that services availability cannot be guaranteed at all times. This a
 
 In addition, some Spaces on which APIs are hosted can also be paused or put on standby at any time. To manually check the status of an individual service, please refer to the [list of API hosts](#available-models).
 
+In case of doubt, do not hesitate to open Blender console in `Window > Toggle System Console` to check the logs, then feel free to open an issue.
+
 ## Available models
 
 | Model | Pipeline Details | API Host(s) | Average generation time |
